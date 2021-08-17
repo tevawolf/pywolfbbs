@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block body %}
+<a href="{{ url_for('init') }}">スレッド一覧に戻る</a>
+<!-- 公開レベルが閲覧のみの場合、パスワード入力前はパスワード入力フォームを表示する -->
+<div class="card">
+    <div class="card-body">
+        <form action="{{ url_for('vil_private_password') }}" method=post class="add-entry">
+            <div class="form-group">
+                <label for="VilPassword">パスワード</label>
+                <input type="text" class="form-control" id="VilPassword" name="vil_password">
+            </div>
+            <button type="submit" class="btn btn-primary">認証</button>
+            <input type="hidden" name="vil_no" value="{{ no }}">
+        </form>
+    </div>
+</div>
+{% endblock %}

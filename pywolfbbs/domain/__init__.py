@@ -1,0 +1,1 @@
+from pywolfbbs.domain.GameVil import *
