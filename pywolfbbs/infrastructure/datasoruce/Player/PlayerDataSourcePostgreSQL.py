@@ -5,13 +5,13 @@ from pywolfbbs.infrastructure.repository.Player.PlayerRepository import PlayerRe
 
 class PlayerDataSourcePostgreSQL(PlayerRepository):
 
-    def addPlayer(self, id: str, name: str, password: bytes, tag: bytes, nonce: bytes) -> bool:
+    def addPlayer(self, player_id: str, name: str, password: bytes, tag: bytes, nonce: bytes) -> bool:
 
         # DB接続、SQL実行とコミット
         conn = get_postgres()
         c = conn.cursor()
-        c.execute(r"INSERT INTO posters(poster_id, poster_name, password, tag, nonce) VALUES " \
-                      "('{0}', '{1}'".format(id, name) + ", %s, %s, %s )",
+        c.execute(r"INSERT INTO players(player_id, player_name, password, tag, nonce) VALUES " \
+                      "('{0}', '{1}'".format(player_id, name) + ", %s, %s, %s )",
                   (psycopg2.Binary(password), psycopg2.Binary(tag), psycopg2.Binary(nonce),)
                   )
         conn.commit()
@@ -19,13 +19,13 @@ class PlayerDataSourcePostgreSQL(PlayerRepository):
         c.close()
         return True
 
-    def queryPlayer(self, poster_id: str) -> []:
+    def queryPlayer(self, player_id: str) -> []:
 
         player = []
 
         conn = get_postgres()
         c = conn.cursor()
-        c.execute("SELECT * FROM posters WHERE poster_id = '{0}'".format(poster_id))
+        c.execute("SELECT * FROM players WHERE player_id = '{0}'".format(player_id))
         row = c.fetchone()
 
         if not (row is None):

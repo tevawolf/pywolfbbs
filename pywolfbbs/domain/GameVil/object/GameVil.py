@@ -56,7 +56,7 @@ class GameVil:
         """
         speech_list = self.repository.querySpeechList(self.vil_no.getValue())
         for s in speech_list:
-            speech = SpeechFactory.create(s[0], s[1], s[2], s[3], s[4], s[5])
+            speech = SpeechFactory.create(s[0], s[1], s[2], s[3], s[4])
             self.speechs.append(speech)
 
     def postAllSpeechs(self) -> [Speech]:

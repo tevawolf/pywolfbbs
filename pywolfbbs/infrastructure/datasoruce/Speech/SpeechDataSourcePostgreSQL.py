@@ -6,13 +6,13 @@ from pywolfbbs.infrastructure.repository.Speech.SpeechRepository import SpeechRe
 
 class SpeechDataSourcePostgreSQL(SpeechRepository):
 
-    def addSpeech(self, name: str, dt: datetime, title: str, text: str, vil_no: int) -> bool:
+    def addSpeech(self, dt: datetime, text: str, player_id: str, vil_no: int) -> bool:
 
         # DB接続、SQL実行とコミット
         conn = get_postgres()
         c = conn.cursor()
 
-        c.execute("""SELECT MAX(bulletin_no) FROM bulletins WHERE thread_no = {0}""".format(vil_no))
+        c.execute("""SELECT MAX(speech_no) FROM speechs WHERE vil_no = {0}""".format(vil_no))
         no = c.fetchone()[0]
         if not (no is None):
             no = no + 1
@@ -22,8 +22,8 @@ class SpeechDataSourcePostgreSQL(SpeechRepository):
         # textの改行コードに対応
         text = text.replace('\r\n', '<br>')
 
-        c.execute("""INSERT INTO bulletins(bulletin_no, poster_name, post_datetime, post_text, post_title, thread_no)
-                    VALUES ({0}, '{1}', '{2}', '{3}', '{4}', '{5}')""".format(no, name, dt, text, title, vil_no))
+        c.execute("""INSERT INTO speechs(speech_no, post_datetime, speech_text, player_id, vil_no)
+                    VALUES ({0}, '{1}', '{2}', '{3}', '{4}')""".format(no, dt, text, player_id, vil_no))
         conn.commit()
 
         c.close()

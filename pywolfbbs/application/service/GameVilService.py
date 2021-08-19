@@ -22,9 +22,9 @@ class GameVilService:
         return vil
 
     @staticmethod
-    def postSpeech(name: str, dt: datetime, title, text: str, thread_no: int) -> None:
+    def postSpeech(dt: datetime, text: str, player_id: str, vil_no: int) -> None:
 
-        speech = SpeechFactory.create(9999, name, dt, title, text, thread_no)
+        speech = SpeechFactory.create(9999, dt, text, player_id, vil_no)
         speech.createSpeach()
 
     @staticmethod

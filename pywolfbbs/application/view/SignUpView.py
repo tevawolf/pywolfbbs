@@ -11,7 +11,7 @@ class SignUpView(MethodView):
     """
 
     @staticmethod
-    def play():
+    def post():
 
         PlayerService.signUp(
             request.form['playerId'], request.form['playerName'], request.form['playerPassword']

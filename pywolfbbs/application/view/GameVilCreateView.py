@@ -14,7 +14,7 @@ class GameVilCreateView(MethodView):
     @staticmethod
     def post():
 
-        GameFrontService.createGameVil(request.form['title'], request.form['level'], request.form['thread_password'])
+        GameFrontService.createGameVil(request.form['title'], request.form['level'], request.form['vil_password'])
 
         flash('スレッドを作成しました。')
 

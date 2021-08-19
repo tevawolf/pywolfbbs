@@ -64,7 +64,7 @@ class Player:
             cipher_dec = AES.new(self.KEY, AES.MODE_EAX, nonce)
             dec_password = cipher_dec.decrypt_and_verify(password, tag)
 
-            return Union[dec_password.decode('utf-8') == self.password.getValue(), player[1]]
+            return dec_password.decode('utf-8') == self.password.getValue(), player[1]
 
         # IDが存在しない場合
-        return Union[False, '']
+        return False, ''

@@ -8,14 +8,13 @@ class SpeechRepository(metaclass=ABCMeta):
     """
 
     @abstractmethod
-    def addSpeech(self, name: str, dt: datetime, title: str, text: str, vil_no: int) -> bool:
+    def addSpeech(self,  dt: datetime, text: str, player_id: str, vil_no: int) -> bool:
         """
         BSpeechを永続化するメソッド
-        :param vil_no:
-        :param title:
         :param text:
         :param dt:
-        :param name:
+        :param player_id:
+        :param vil_no:
         :return:
         """
         pass

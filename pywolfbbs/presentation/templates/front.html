@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block body %}
-<!-- スレッドリスト表示 -->
-<h2>スレッド一覧</h2>
+<!-- 村リスト表示 -->
+<h2>村一覧</h2>
 <ul class="list-group list-group-flush">
 {% for vil in vils %}
     <div class="card">
@@ -47,7 +47,7 @@
     </div>
 </div>
 <!-- サイン関連フォーム -->
-{% if not 'poster_name' in session %}
+{% if not 'player_name' in session %}
 <div class="card">
     <div class="card-body">
         <form action="{{ url_for('signin') }}" method=post class="signin">
@@ -68,15 +68,15 @@
         <form action="{{ url_for('signup') }}" method=post class="signup">
             <div class="form-group">
                 <label for="InputId">ID</label>
-                <input type="text" class="form-control" id="InputId" name="posterId">
+                <input type="text" class="form-control" id="InputId" name="playerId">
             </div>
             <div class="form-group">
                 <label for="InputName">名前</label>
-                <input type="text" class="form-control" id="InputName" name="posterName">
+                <input type="text" class="form-control" id="InputName" name="playerName">
             </div>
             <div class="form-group">
                 <label for="InputPassword">パスワード</label>
-                <input type="text" class="form-control" id="InputPassword" name="posterPassword">
+                <input type="text" class="form-control" id="InputPassword" name="playerPassword">
             </div>
             <button type="submit" class="btn btn-primary">サインアップ</button>
         </form>
@@ -86,7 +86,7 @@
 <div class="card">
     <div class="card-body">
         <form action="{{ url_for('signout') }}" method=get class="signout">
-            ID:{{ session['poster_id'] }} 名前：{{ session['poster_name'] }}
+            ID:{{ session['player_id'] }} 名前：{{ session['player_name'] }}
             <button type="submit" class="btn btn-primary">サインアウト</button>
         </form>
     </div>

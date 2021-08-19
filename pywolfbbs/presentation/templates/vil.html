@@ -1,17 +1,15 @@
 {% extends "layout.html" %}
 {% block body %}
-<a href="{{ url_for('init') }}">スレッド一覧に戻る</a>
-<h2>スレッドNo.{{ vil.vil_no.getValue() }} {{ vil.vil_name.getValue() }}</h2>
+<a href="{{ url_for('init') }}">フロントページに戻る</a>
+<h2>No.{{ vil.vil_no.getValue() }} {{ vil.vil_name.getValue() }}</h2>
 <!-- 投稿リスト表示 -->
 <ul class="list-group list-group-flush">
 {% for speech in vil.postAllSpeechs() %}
     <div class="card">
         <div class="card-body">
-          <h2>No.{{ speech.speechNo.getValue() }}</h2>
-          <br>
           {{ speech.speechText.getValue()|safe }}
           <br><br>
-          投稿日時 {{ speech.postDateTime.getFormatValue() }} 投稿者 {{ speech.playerName.getValue() }}
+          投稿日時 {{ speech.postDateTime.getFormatValue() }} 投稿者 {{ speech.playerId.getValue() }} [{{ speech.speechNo.getValue() }}]
           <br><br>
         </div>
     </div>
@@ -20,7 +18,7 @@
     投稿がありません
 {% endfor %}
 </ul>
-<a href="{{ url_for('init') }}">スレッド一覧に戻る</a>
+<a href="{{ url_for('init') }}">フロントページに戻る</a>
 <!-- 投稿フォーム -->
 <!-- 公開レベルが閲覧のみの場合、パスワード入力前はパスワード入力フォームを表示する -->
 {% if vil.public_level == PUBLIC_LEVEL_READONLY and (session['vil_auth'] != True or session['vil_auth_no'] != vil.vil_no.getValue())  %}
@@ -41,10 +39,6 @@
     <div class="card-body">
         <form action="{{ url_for('speech_add') }}" method=post class="add-entry">
             <div class="form-group">
-                <label for="InputTitleRO">タイトル</label>
-                <input type="text" class="form-control" id="InputTitleRO" name="title">
-            </div>
-            <div class="form-group">
                 <label for="InputTextRO">本文</label>
                 <textarea class="form-control" id="InputTextRO" name="text" rows="3"></textarea>
             </div>
@@ -58,10 +52,6 @@
     <div class="card-body">
         <form action="{{ url_for('speech_add') }}" method=post class="add-entry">
             <div class="form-group">
-                <label for="InputTitle">タイトル</label>
-                <input type="text" class="form-control" id="InputTitle" name="title">
-            </div>
-            <div class="form-group">
                 <label for="InputText">本文</label>
                 <textarea class="form-control" id="InputText" name="text" rows="3"></textarea>
             </div>
@@ -72,7 +62,7 @@
 </div>
 {% endif %}
 <!-- サイン関連フォーム -->
-{% if not 'poster_name' in session %}
+{% if not 'player_name' in session %}
 <div class="card">
     <div class="card-body">
         <form action="{{ url_for('signin') }}" method=post class="signin">
@@ -93,15 +83,15 @@
         <form action="{{ url_for('signup') }}" method=post class="signup">
             <div class="form-group">
                 <label for="InputId">ID</label>
-                <input type="text" class="form-control" id="InputId" name="posterId">
+                <input type="text" class="form-control" id="InputId" name="playerId">
             </div>
             <div class="form-group">
                 <label for="InputName">名前</label>
-                <input type="text" class="form-control" id="InputName" name="posterName">
+                <input type="text" class="form-control" id="InputName" name="playerName">
             </div>
             <div class="form-group">
                 <label for="InputPassword">パスワード</label>
-                <input type="text" class="form-control" id="InputPassword" name="posterPassword">
+                <input type="text" class="form-control" id="InputPassword" name="playerPassword">
             </div>
             <button type="submit" class="btn btn-primary">サインアップ</button>
         </form>
@@ -111,11 +101,11 @@
 <div class="card">
     <div class="card-body">
         <form action="{{ url_for('signout') }}" method=get class="signout">
-            ID:{{ session['poster_id'] }} 名前：{{ session['poster_name'] }}
+            ID:{{ session['player_id'] }} 名前：{{ session['player_name'] }}
             <button type="submit" class="btn btn-primary">サインアウト</button>
         </form>
     </div>
 </div>
 {% endif %}
-<a href="{{ url_for('init') }}">スレッド一覧に戻る</a>
+<a href="{{ url_for('init') }}">プロントページに戻る</a>
 {% endblock %}
