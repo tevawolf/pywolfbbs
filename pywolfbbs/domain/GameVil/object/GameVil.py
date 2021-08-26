@@ -108,7 +108,7 @@ class GameVil:
             self.public_level.value,
             self.password.getValue(),
             self.current_date.getValue(),
-            self.current_date_status.getValue()
+            self.current_date_status.value
         )
 
     def isPasswordMatched(self) -> bool:

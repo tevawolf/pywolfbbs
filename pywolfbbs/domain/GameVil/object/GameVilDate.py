@@ -35,8 +35,8 @@ class GameVilDate:
         # 永続化
         self.repository.createGameVilDate(
             self.date_num.getValue(),
-            vil_no.getValue(),
-            self.date_status.getValue()
+            vil_no,
+            self.date_status.value
         )
 
 

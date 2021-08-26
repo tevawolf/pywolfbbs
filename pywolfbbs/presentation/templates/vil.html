@@ -14,7 +14,7 @@
 {% if vil.current_date_status != CUR_DATE_STATUS_EPILOGUE and vil.current_date_status != CUR_DATE_STATUS_END %}
         <a href="{{ url_for('dev_progress_epilogue', vil_no=vil.vil_no.getValue()) }}">(開発用)エピローグに進める</a>
 {% endif %}
-{% if vil.current_date_status != CUR_DATE_STATUS_END %}
+{% if vil.current_date_status == CUR_DATE_STATUS_EPILOGUE %}
         <a href="{{ url_for('dev_progress_end', vil_no=vil.vil_no.getValue()) }}">(開発用)終了する</a>
 {% endif %}
     </div>
