@@ -11,6 +11,7 @@ class GameVilReadonlyPasswordInputView(MethodView):
     def post():
 
         no = int(request.form['vil_no'])
+        date = int(request.form['vil_date'])
 
         if GameVilService.authenticatePassword(no, request.form['vil_password']):
             session['vil_auth'] = True
@@ -19,4 +20,4 @@ class GameVilReadonlyPasswordInputView(MethodView):
         else:
             flash('認証失敗。パスワードが違います。')
 
-        return redirect(url_for('vil', no=no))
+        return redirect(url_for('vil', no=no, disp_date=date))

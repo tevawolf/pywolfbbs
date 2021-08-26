@@ -15,7 +15,15 @@ class GameVilRepository(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def querySpeechList(self, no: int) -> []:
+    def queryVilDateList(self, no: int) -> []:
+        """
+        VilGameDateのリストを返すクエリーメソッド
+        :return: VilGameDateのリスト
+        """
+        return []
+
+    @abstractmethod
+    def querySpeechList(self, no: int, date: int) -> []:
         """
         Speechのリストを返すクエリーメソッド
         :return: Speechのリスト
@@ -23,11 +31,15 @@ class GameVilRepository(metaclass=ABCMeta):
         return []
 
     @abstractmethod
-    def createGameVil(self, name: str, level: int, password: str) -> bool:
+    def createGameVil(self, name: str, level: int, password: str, date: int, status: int) -> int:
         """
         GameVilを永続化するメソッド
         :param name:
-        :return:
+        :param level:
+        :param password:
+        :param date:
+        :param status:
+        :return: 村番号
         """
         pass
 

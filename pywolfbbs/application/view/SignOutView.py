@@ -16,4 +16,6 @@ class SignOutView(MethodView):
 
         flash('サインアウトしました。')
 
+        # 村番号と表示日を受け取ってそこに遷移
+        # なければinit（フロントページ）
         return redirect(url_for('init'))

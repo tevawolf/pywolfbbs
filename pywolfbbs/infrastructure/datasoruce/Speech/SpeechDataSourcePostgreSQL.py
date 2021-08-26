@@ -6,7 +6,7 @@ from pywolfbbs.infrastructure.repository.Speech.SpeechRepository import SpeechRe
 
 class SpeechDataSourcePostgreSQL(SpeechRepository):
 
-    def addSpeech(self, dt: datetime, text: str, player_id: str, vil_no: int) -> bool:
+    def addSpeech(self, dt: datetime, text: str, player_id: str, vil_no: int, vil_date) -> bool:
 
         # DB接続、SQL実行とコミット
         conn = get_postgres()
@@ -22,8 +22,8 @@ class SpeechDataSourcePostgreSQL(SpeechRepository):
         # textの改行コードに対応
         text = text.replace('\r\n', '<br>')
 
-        c.execute("""INSERT INTO speechs(speech_no, post_datetime, speech_text, player_id, vil_no)
-                    VALUES ({0}, '{1}', '{2}', '{3}', '{4}')""".format(no, dt, text, player_id, vil_no))
+        c.execute("""INSERT INTO speechs(speech_no, post_datetime, speech_text, player_id, vil_no, vil_date)
+                    VALUES ({0}, '{1}', '{2}', '{3}', {4}, {5})""".format(no, dt, text, player_id, vil_no, vil_date))
         conn.commit()
 
         c.close()

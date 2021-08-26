@@ -23,4 +23,6 @@ class SignUpView(MethodView):
 
         flash('ユーザ{0}：{1}でサインアップしました。'.format(request.form['playerId'], request.form['playerName']))
 
+        # 村番号と表示日を受け取ってそこに遷移
+        # なければinit（フロントページ）
         return redirect(url_for('init'))

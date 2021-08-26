@@ -7,22 +7,23 @@
     <div class="card">
         <div class="card-body">
             <!-- 公開レベルが非公開の場合は、別のurlリンクにする -->
+            {# リンクから現在日も渡すようにする #}
     {% if vil.public_level.value != public_levels[2].value %}
-            <a href="{{ url_for('vil', no=vil.vil_no.getValue()) }}">
+            <a href="{{ url_for('vil', no=vil.vil_no.getValue(), disp_date=vil.current_date.getValue()) }}">
     {% else %}
-            <a href="{{ url_for('vil_private_auth', no=vil.vil_no.getValue()) }}">
+            <a href="{{ url_for('vil_private_auth', no=vil.vil_no.getValue(), disp_date=vil.current_date.getValue()) }}">
     {% endif %}
                 No.{{ vil.vil_no.getValue() }} {{ vil.vil_name.getValue() }}
             </a>
-            {{ vil.public_level.name }}
+             {{ vil.current_date_status.name }}({{ vil.current_date.getValue() }}日目) {{ vil.public_level.name }}
         </div>
     </div>
 {# for文のelseは、forが1回以上実行された場合、forループ完了後に実行される #}
 {% else %}
-    スレッドがありません
+    村がありません
 {% endfor %}
 </ul>
-<!-- スレッド作成フォーム -->
+<!-- 村作成フォーム -->
 <div class="card">
     <div class="card-body">
         <form action="{{ url_for('create_vil') }}" method=post class="add-entry" name="createVil">
@@ -42,7 +43,7 @@
                 <label for="vilPassword">パスワード(アクセスレベルが「閲覧のみ」「非公開」の場合）</label>
                 <input type="text" class="form-control" id="vilPassword" name="vil_password">
             </div>
-            <button type="submit" class="btn btn-primary">作成</button>
+            <button type="submit" class="btn btn-danger">作成</button>
         </form>
     </div>
 </div>
@@ -59,7 +60,7 @@
                 <label for="SignPassword">パスワード</label>
                 <input type="text" class="form-control" id="SignPassword" name="signInPassword">
             </div>
-            <button type="submit" class="btn btn-primary">サインイン</button>
+            <button type="submit" class="btn btn-warning">サインイン</button>
         </form>
     </div>
 </div>
@@ -78,7 +79,7 @@
                 <label for="InputPassword">パスワード</label>
                 <input type="text" class="form-control" id="InputPassword" name="playerPassword">
             </div>
-            <button type="submit" class="btn btn-primary">サインアップ</button>
+            <button type="submit" class="btn btn-warning">サインアップ</button>
         </form>
     </div>
 </div>
@@ -87,7 +88,7 @@
     <div class="card-body">
         <form action="{{ url_for('signout') }}" method=get class="signout">
             ID:{{ session['player_id'] }} 名前：{{ session['player_name'] }}
-            <button type="submit" class="btn btn-primary">サインアウト</button>
+            <button type="submit" class="btn btn-warning">サインアウト</button>
         </form>
     </div>
 </div>

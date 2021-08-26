@@ -2,6 +2,45 @@
 {% block body %}
 <a href="{{ url_for('init') }}">フロントページに戻る</a>
 <h2>No.{{ vil.vil_no.getValue() }} {{ vil.vil_name.getValue() }}</h2>
+
+{# 「表示日」の値が必要。この画面の呼び出し元、遷移先すべてで値のやりとりをする必要がある #}
+
+<div class="card">
+    <div class="card-body">
+{# 開発用に日にちを進める、エピローグに進める、終了するボタンを用意 #}
+{% if vil.current_date_status != CUR_DATE_STATUS_EPILOGUE and vil.current_date_status != CUR_DATE_STATUS_END %}
+        <a href="{{ url_for('dev_progress_date', vil_no=vil.vil_no.getValue()) }}">(開発用)日にちを進める</a>
+{% endif %}
+{% if vil.current_date_status != CUR_DATE_STATUS_EPILOGUE and vil.current_date_status != CUR_DATE_STATUS_END %}
+        <a href="{{ url_for('dev_progress_epilogue', vil_no=vil.vil_no.getValue()) }}">(開発用)エピローグに進める</a>
+{% endif %}
+{% if vil.current_date_status != CUR_DATE_STATUS_END %}
+        <a href="{{ url_for('dev_progress_end', vil_no=vil.vil_no.getValue()) }}">(開発用)終了する</a>
+{% endif %}
+    </div>
+</div>
+
+<!-- 日数リスト表示 -->
+{% for date in vil.postAllDates() %}
+    {# 将来的にはリストボックスかリストボタンなども検討 #}
+    {# ステータスも見て、進行中以外なら、その文言を表示。表示日以外はリンク表示 #}
+    {# 表示日を渡して村と発言を検索、表示 #}
+    {% if date.date_num.getValue() != disp_date %}
+    <a href="{{ url_for('vil', no=vil.vil_no.getValue(), disp_date=date.date_num.getValue()) }}">
+    {% endif %}
+    {% if date.date_status == CUR_DATE_STATUS_PROLOGUE %}
+        プロローグ
+    {% elif date.date_status == CUR_DATE_STATUS_EPILOGUE %}
+        エピローグ
+    {% elif date.date_status == CUR_DATE_STATUS_END %}
+        終了
+    {% else %}
+        {{ date.date_num.getValue() }}日目
+    {% endif %}
+    {% if date.date_num.getValue() != disp_date %}
+    </a>
+    {% endif %}
+{% endfor %}
 <!-- 投稿リスト表示 -->
 <ul class="list-group list-group-flush">
 {% for speech in vil.postAllSpeechs() %}
@@ -21,7 +60,8 @@
 <a href="{{ url_for('init') }}">フロントページに戻る</a>
 <!-- 投稿フォーム -->
 <!-- 公開レベルが閲覧のみの場合、パスワード入力前はパスワード入力フォームを表示する -->
-{% if vil.public_level == PUBLIC_LEVEL_READONLY and (session['vil_auth'] != True or session['vil_auth_no'] != vil.vil_no.getValue())  %}
+{% if vil.current_date_status != CUR_DATE_STATUS_END %}
+    {% if vil.public_level == PUBLIC_LEVEL_READONLY and (session['vil_auth'] != True or session['vil_auth_no'] != vil.vil_no.getValue())  %}
 <div class="card">
     <div class="card-body">
         <form action="{{ url_for('vil_readonly_password') }}" method=post class="add-entry">
@@ -29,12 +69,13 @@
                 <label for="VilPassword">パスワード</label>
                 <input type="text" class="form-control" id="VilPassword" name="vil_password">
             </div>
-            <button type="submit" class="btn btn-primary">認証</button>
+            <button type="submit" class="btn btn-warning">認証</button>
             <input type="hidden" name="vil_no" value="{{ vil.vil_no.getValue() }}">
+            <input type="hidden" name="vil_date" value="{{ vil.current_date.getValue() }}">
         </form>
     </div>
 </div>
-{% elif vil.public_level == PUBLIC_LEVEL_READONLY and session['vil_auth'] == True and session['vil_auth_no'] == vil.vil_no.getValue() %}
+    {% elif vil.public_level == PUBLIC_LEVEL_READONLY and session['vil_auth'] == True and session['vil_auth_no'] == vil.vil_no.getValue() %}
 <div class="card">
     <div class="card-body">
         <form action="{{ url_for('speech_add') }}" method=post class="add-entry">
@@ -42,12 +83,13 @@
                 <label for="InputTextRO">本文</label>
                 <textarea class="form-control" id="InputTextRO" name="text" rows="3"></textarea>
             </div>
-            <button type="submit" class="btn btn-primary">作成</button>
+            <button type="submit" class="btn btn-danger">発言</button>
             <input type="hidden" name="vil_no" value="{{ vil.vil_no.getValue() }}">
+            <input type="hidden" name="vil_date" value="{{ vil.current_date.getValue() }}">
         </form>
     </div>
 </div>
-{% elif vil.public_level != PUBLIC_LEVEL_READONLY %}
+    {% elif vil.public_level != PUBLIC_LEVEL_READONLY %}
 <div class="card">
     <div class="card-body">
         <form action="{{ url_for('speech_add') }}" method=post class="add-entry">
@@ -55,11 +97,13 @@
                 <label for="InputText">本文</label>
                 <textarea class="form-control" id="InputText" name="text" rows="3"></textarea>
             </div>
-            <button type="submit" class="btn btn-primary">作成</button>
+            <button type="submit" class="btn btn-danger">発言</button>
             <input type="hidden" name="vil_no" value="{{ vil.vil_no.getValue() }}">
+            <input type="hidden" name="vil_date" value="{{ vil.current_date.getValue() }}">
         </form>
     </div>
 </div>
+    {% endif %}
 {% endif %}
 <!-- サイン関連フォーム -->
 {% if not 'player_name' in session %}
@@ -74,7 +118,7 @@
                 <label for="SignPassword">パスワード</label>
                 <input type="text" class="form-control" id="SignPassword" name="signInPassword">
             </div>
-            <button type="submit" class="btn btn-primary">サインイン</button>
+            <button type="submit" class="btn btn-warning">サインイン</button>
         </form>
     </div>
 </div>
@@ -93,7 +137,7 @@
                 <label for="InputPassword">パスワード</label>
                 <input type="text" class="form-control" id="InputPassword" name="playerPassword">
             </div>
-            <button type="submit" class="btn btn-primary">サインアップ</button>
+            <button type="submit" class="btn btn-warning">サインアップ</button>
         </form>
     </div>
 </div>
@@ -102,7 +146,7 @@
     <div class="card-body">
         <form action="{{ url_for('signout') }}" method=get class="signout">
             ID:{{ session['player_id'] }} 名前：{{ session['player_name'] }}
-            <button type="submit" class="btn btn-primary">サインアウト</button>
+            <button type="submit" class="btn btn-warning">サインアウト</button>
         </form>
     </div>
 </div>

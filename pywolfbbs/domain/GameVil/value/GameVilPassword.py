@@ -1,4 +1,4 @@
-class GameVliPassword:
+class GameVilPassword:
     """
     @DomainObject
     @ValueObject

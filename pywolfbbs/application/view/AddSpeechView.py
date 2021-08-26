@@ -15,14 +15,15 @@ class AddSpeechView(MethodView):
     def post():
 
         vil_no = int(request.form['vil_no'])
+        vil_date = int(request.form['vil_date'])
 
         if 'player_id' in session:
             GameVilService.postSpeech(
-                datetime.datetime.now(), request.form['text'], session['player_id'], vil_no)
+                datetime.datetime.now(), request.form['text'], session['player_id'], vil_no, vil_date)
         else:
             GameVilService.postSpeech(
-                datetime.datetime.now(), request.form['text'], 'anonymous', vil_no)
+                datetime.datetime.now(), request.form['text'], 'anonymous', vil_no, vil_date)
 
         flash('発言を投稿しました。')
 
-        return redirect(url_for('vil', no=vil_no))
+        return redirect(url_for('vil', no=vil_no, disp_date=vil_date))

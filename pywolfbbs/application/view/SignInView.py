@@ -20,6 +20,9 @@ class SignInView(MethodView):
             session['player_id'] = request.form['signInId']
             session['player_name'] = player_name
             flash('ユーザ{0}でサインインしました。'.format(request.form['signInId']))
+
+            # 村番号と表示日を受け取ってそこに遷移
+
         else:
             flash('サインインできませんでした。')
 

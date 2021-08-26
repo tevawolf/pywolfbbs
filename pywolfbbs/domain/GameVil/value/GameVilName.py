@@ -1,4 +1,4 @@
-class GameVliName:
+class GameVilName:
     """
     @DomainObject
     @ValueObject

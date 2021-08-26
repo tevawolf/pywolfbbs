@@ -8,7 +8,7 @@ from pywolfbbs.application.service.GameFrontService import GameFrontService
 
 class GameVilCreateView(MethodView):
     """
-    スレッド作成View
+    村作成View
     """
 
     @staticmethod
@@ -16,6 +16,6 @@ class GameVilCreateView(MethodView):
 
         GameFrontService.createGameVil(request.form['title'], request.form['level'], request.form['vil_password'])
 
-        flash('スレッドを作成しました。')
+        flash('村を作成しました。')
 
         return redirect(url_for('init'))

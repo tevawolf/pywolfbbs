@@ -19,7 +19,7 @@ class GameFront:
         # こちらでクエリ発行して、まず全件保持しておく
         vil_list = r.queryGameVilList()
         for b in vil_list:
-            vil = GameVliFactory.create(b[0], b[1], b[2], '')
+            vil = GameVliFactory.create(b[0], b[1], b[2], '', b[3], b[4])
             self.gamevils.append(vil)
 
     def postAllGameVils(self) -> [GameVil]:
