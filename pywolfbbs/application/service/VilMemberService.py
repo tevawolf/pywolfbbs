@@ -23,4 +23,3 @@ class VilMemberService:
         member = VilMemberFactory.create(vil_no, player_id, 0, member_name, member_title)
         member.createMember()
 
-        speech
