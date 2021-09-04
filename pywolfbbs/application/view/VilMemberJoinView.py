@@ -1,4 +1,4 @@
-from datetime import datetime
+import datetime
 
 from flask import request, session, flash, url_for
 from flask.views import MethodView
