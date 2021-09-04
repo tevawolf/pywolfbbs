@@ -21,4 +21,6 @@ class VilMemberService:
     def joinMember(vil_no: int, player_id: str, member_name: str, member_title: str) -> None:
 
         member = VilMemberFactory.create(vil_no, player_id, 0, member_name, member_title)
-        return member.createMember()
+        member.createMember()
+
+        speech
