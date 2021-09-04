@@ -27,7 +27,7 @@ class GameVilService:
     def postSpeech(dt: datetime, text: str, player_id: str, vil_no: int, vil_date: int) -> None:
 
         speech = SpeechFactory.create(9999, dt, text, player_id, vil_no, vil_date)
-        speech.createSpeach()
+        speech.createSpeech()
 
     @staticmethod
     def authenticatePassword(no: int, password: str) -> bool:

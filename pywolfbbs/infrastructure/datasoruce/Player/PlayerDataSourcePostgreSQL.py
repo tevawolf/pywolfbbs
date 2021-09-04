@@ -34,6 +34,7 @@ class PlayerDataSourcePostgreSQL(PlayerRepository):
             player.append(row[2])
             player.append(row[3])
             player.append(row[4])
-            c.close()
+
+        c.close()
 
         return player

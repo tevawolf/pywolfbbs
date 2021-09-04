@@ -21,6 +21,7 @@ class AddSpeechView(MethodView):
             GameVilService.postSpeech(
                 datetime.datetime.now(), request.form['text'], session['player_id'], vil_no, vil_date)
         else:
+            # 人狼ゲームでは発言にプレイヤーログイン必須のため、不要になる
             GameVilService.postSpeech(
                 datetime.datetime.now(), request.form['text'], 'anonymous', vil_no, vil_date)
 

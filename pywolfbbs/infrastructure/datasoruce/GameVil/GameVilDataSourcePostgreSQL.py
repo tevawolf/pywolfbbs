@@ -38,11 +38,30 @@ class GameVilDataSourcePostgreSQL(GameVilRepository):
 
         conn = get_postgres()
         c = conn.cursor()
-        c.execute('SELECT * FROM speechs WHERE vil_no = {0} AND vil_date = {1} ORDER BY vil_no ASC'.format(no, date))
+        c.execute(
+            """
+            SELECT 
+                s.speech_no,
+                s.post_datetime,
+                s.speech_text,
+                s.player_id,
+                s.vil_no,
+                s.vil_date,
+                m.member_no,
+                m.member_name,
+                m.member_title
+            FROM speechs s
+            INNER JOIN vilmembers m
+            ON s.vil_no = m.vil_no
+            AND s.player_id = m.player_id
+            WHERE s.vil_no = {0} AND s.vil_date = {1} 
+            ORDER BY s.post_datetime ASC
+            """.format(no, date)
+        )
         rows = c.fetchall()
         speech_list = []
         for row in rows:
-            speech_list.append([row[0], row[1], row[2], row[3], row[4], row[5]])
+            speech_list.append([row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8]])
         c.close()
 
         return speech_list

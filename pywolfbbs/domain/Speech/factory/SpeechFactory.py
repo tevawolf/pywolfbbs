@@ -20,7 +20,8 @@ class SpeechFactory:
         injector = Injector([SpeechDIModule()])
         speech = injector.get(Speech)
         speech.setValues(
-            SpeechNo(no), PostDateTime(dt), SpeechText(text), PlayerId(player_id), GameVilNo(vil_no), GameVilDateNum(vil_date)
+            SpeechNo(no), PostDateTime(dt), SpeechText(text), PlayerId(player_id), GameVilNo(vil_no),
+            GameVilDateNum(vil_date)
         )
 
         return speech

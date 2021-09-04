@@ -12,6 +12,7 @@ from pywolfbbs.domain.GameVil.object.GameVilPublicLevel import GameVilPublicLeve
 from pywolfbbs.domain.GameVil.value.GameVilName import GameVilName
 from pywolfbbs.domain.GameVil.value.GameVilNo import GameVilNo
 from pywolfbbs.domain.GameVil.value.GameVilPassword import GameVilPassword
+from pywolfbbs.domain.VilMember.factory.VilMemberFactory import VilMemberFactory
 from pywolfbbs.infrastructure.repository.GameVil.GameVilRepository import GameVilRepository
 
 
@@ -81,6 +82,8 @@ class GameVil:
         speech_list = self.repository.querySpeechList(self.vil_no.getValue(), disp_date)
         for s in speech_list:
             speech = SpeechFactory.create(s[0], s[1], s[2], s[3], s[4], s[5])
+            member = VilMemberFactory.create(self.vil_no.getValue(), s[3], s[6], s[7], s[8])
+            speech.member = member
             self.speechs.append(speech)
 
     def postAllDates(self) -> [GameVilDate]:

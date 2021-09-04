@@ -18,32 +18,33 @@ class Speech:
     @inject
     def __init__(self, r: SpeechRepository):
         self.repository = r
-        self.speechNo = None
-        self.postDateTime = None
-        self.speechText = None
-        self.playerId = None
+        self.speech_no = None
+        self.post_datetime = None
+        self.speech_text = None
+        self.player_id = None
         self.vil_no = None
         self.vil_date = None
+        self.member = None
 
     def setValues(self, no: SpeechNo, dt: PostDateTime, text: SpeechText, player_id: PlayerId, vil_no: GameVilNo,
                   vil_date: GameVilDateNum):
-        self.speechNo = no
-        self.postDateTime = dt
-        self.speechText = text
-        self.playerId = player_id
+        self.speech_no = no
+        self.post_datetime = dt
+        self.speech_text = text
+        self.player_id = player_id
         self.vil_no = vil_no
         self.vil_date = vil_date
 
-    def createSpeach(self) -> None:
+    def createSpeech(self) -> None:
         """
         発言を作成
         :return: なし
         """
         # 永続化
         self.repository.addSpeech(
-            self.postDateTime.getValue(),
-            self.speechText.getValue(),
-            self.playerId.getValue(),
+            self.post_datetime.getValue(),
+            self.speech_text.getValue(),
+            self.player_id.getValue(),
             self.vil_no.getValue(),
             self.vil_date.getValue()
         )

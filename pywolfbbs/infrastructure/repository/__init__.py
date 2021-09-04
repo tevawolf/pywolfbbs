@@ -1,2 +1,0 @@
-from pywolfbbs.infrastructure.repository.Speech.SpeechRepository import SpeechRepository
-from pywolfbbs.infrastructure.repository.GameVil.GameFrontRepository import GameFrontRepository

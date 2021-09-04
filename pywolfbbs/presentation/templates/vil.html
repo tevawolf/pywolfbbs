@@ -46,10 +46,12 @@
 {% for speech in vil.postAllSpeechs() %}
     <div class="card">
         <div class="card-body">
-          {{ speech.speechText.getValue()|safe }}
-          <br><br>
-          投稿日時 {{ speech.postDateTime.getFormatValue() }} 投稿者 {{ speech.playerId.getValue() }} [{{ speech.speechNo.getValue() }}]
-          <br><br>
+            {{ speech.member.member_title.getValue() }}　{{ speech.member.member_name.getValue() }}
+            <br><br>
+            {{ speech.speech_text.getValue()|safe }}
+            <br><br>
+            <div style="text-align:end">{{ speech.post_datetime.getFormatValue() }} [{{ speech.speech_no.getValue() }}]</div>
+            <br><br>
         </div>
     </div>
 {# for文のelseは、forが1回以上実行された場合、forループ完了後に実行される #}
@@ -80,6 +82,8 @@
     <div class="card-body">
         <form action="{{ url_for('speech_add') }}" method=post class="add-entry">
             <div class="form-group">
+                <label>肩書き：</label>{{ member.member_title.getValue() }}<br>
+                <label>名前：</label>{{ member.member_name.getValue() }}<br>
                 <label for="InputTextRO">本文</label>
                 <textarea class="form-control" id="InputTextRO" name="text" rows="3"></textarea>
             </div>
@@ -92,8 +96,14 @@
     {% elif vil.public_level != PUBLIC_LEVEL_READONLY %}
 <div class="card">
     <div class="card-body">
+        {% if not 'player_name' in session %}
+        入村・発言するにはサインインしてください。
+        {% else %}
+            {% if member != None %}
         <form action="{{ url_for('speech_add') }}" method=post class="add-entry">
             <div class="form-group">
+                <label>肩書き：</label>{{ member.member_title.getValue() }}<br>
+                <label>名前：</label>{{ member.member_name.getValue() }}<br>
                 <label for="InputText">本文</label>
                 <textarea class="form-control" id="InputText" name="text" rows="3"></textarea>
             </div>
@@ -101,6 +111,22 @@
             <input type="hidden" name="vil_no" value="{{ vil.vil_no.getValue() }}">
             <input type="hidden" name="vil_date" value="{{ vil.current_date.getValue() }}">
         </form>
+            {% else %}
+        <form action="{{ url_for('member_join') }}" method=post class="add-entry">
+            <div class="form-group">
+                <label for="InputMemberTitle">肩書き</label>
+                <input type="text" class="form-control" id="InputMemberTitle" name="member_title">
+                <label for="InputMemberName">名前</label>
+                <input type="text" class="form-control" id="InputMemberName" name="member_name">
+                <label for="InputTextEnterVil">本文</label>
+                <textarea class="form-control" id="InputTextEnterVil" name="text" rows="3"></textarea>
+            </div>
+            <button type="submit" class="btn btn-danger">入村</button>
+            <input type="hidden" name="vil_no" value="{{ vil.vil_no.getValue() }}">
+            <input type="hidden" name="vil_date" value="{{ vil.current_date.getValue() }}">
+        </form>
+            {% endif %}
+        {% endif %}
     </div>
 </div>
     {% endif %}
