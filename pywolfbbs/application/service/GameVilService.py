@@ -1,36 +1,40 @@
-from datetime import datetime
-
-from pywolfbbs.domain.GameVil.object.GameVilDateStatus import GameVilDateStatus
-from pywolfbbs.domain.Speech.factory.SpeechFactory import SpeechFactory
-from pywolfbbs.domain.GameVil.factory.GameVliFactory import GameVliFactory
+from pywolfbbs.domain.GameVil.factory.GameVilDateCollectionFactory import GameVilDateCollectionFactory
+from pywolfbbs.domain.GameVil.object.GameVilDateCollection import GameVilDateCollection
+from pywolfbbs.domain.GameVil.enum.GameVilDateStatus import GameVilDateStatus
+from pywolfbbs.domain.GameVil.factory.GameVilFactory import GameVilFactory
 from pywolfbbs.domain.GameVil.object.GameVil import GameVil
-from pywolfbbs.domain.GameVil.object.GameVilPublicLevel import GameVilPublicLevel
+from pywolfbbs.domain.GameVil.enum.GameVilPublicLevel import GameVilPublicLevel
 
 
 class GameVilService:
     """
-    村表示
-    発言投稿
-    パスワード認証
+    村のサービスオブジェクト
     """
 
     @staticmethod
-    def displayVil(no: int, disp_date: int) -> GameVil:
+    def getVilDate(no: int) -> (GameVil, GameVilDateCollection, ):
+        """
+        村番号に該当する村情報を取得
+        :param no:
+        :param disp_date:
+        :return:
+        """
         # 公開レベル、現在日、現在日ステータスもダミー
-        vil = GameVliFactory.create(no, 'dummy', GameVilPublicLevel.公開, 'dummy', 0, GameVilDateStatus.プロローグ)
+        vil = GameVilFactory.create(no, 'dummy', GameVilPublicLevel.公開.value, 'dummy', 0, GameVilDateStatus.プロローグ.value)
         vil.setValuesByRepository()
-        vil.setVilDateList()
-        vil.setSpeechList(disp_date)
-        return vil
 
-    @staticmethod
-    def postSpeech(dt: datetime, text: str, player_id: str, vil_no: int, vil_date: int) -> None:
+        dates = GameVilDateCollectionFactory.create(no)
 
-        speech = SpeechFactory.create(9999, dt, text, player_id, vil_no, vil_date)
-        speech.createSpeech()
+        return vil, dates
 
     @staticmethod
     def authenticatePassword(no: int, password: str) -> bool:
+        """
+        パスワード認証
+        :param no:
+        :param password:
+        :return:
+        """
         # 公開レベル、現在日、現在日ステータスもダミー
-        vil = GameVliFactory.create(no, 'dummy', GameVilPublicLevel.公開, password, 0, GameVilDateStatus.プロローグ)
+        vil = GameVilFactory.create(no, 'dummy', GameVilPublicLevel.公開.value(), password, 0, GameVilDateStatus.プロローグ.value())
         return vil.isPasswordMatched()

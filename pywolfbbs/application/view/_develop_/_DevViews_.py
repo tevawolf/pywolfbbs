@@ -2,7 +2,7 @@ from flask import flash, url_for
 from flask.views import MethodView
 from werkzeug.utils import redirect
 
-from pywolfbbs.domain.GameVil.object.GameVilDateStatus import GameVilDateStatus
+from pywolfbbs.domain.GameVil.enum.GameVilDateStatus import GameVilDateStatus
 from pywolfbbs.infrastructure.datasoruce.postgresql_db import get_postgres
 
 
@@ -32,6 +32,15 @@ class _DevProgressDateView_(MethodView):
         # gamevil_datesに次の日付のレコードを追加する
         c.execute("""INSERT INTO gamevil_dates(date_num, vil_no, date_status)
                     VALUES ({0}, {1}, {2})""".format(current_date + 1, vil_no, GameVilDateStatus.進行中.value))
+
+        # current_dateが0だったなら、参加者の役職を決定する
+        # ひとまずは希望をそのまま通す
+        # TODO 進行中の投票や役職能力セットがつくれたら、編成による定員を考慮する
+        c.execute("""SELECT player_id, hope_position FROM vilmembers WHERE vil_no = {0}""".format(vil_no))
+        results = c.fetchall()
+        for r in results:
+            c.execute("""UPDATE vilmembers SET position = {0} WHERE player_id = {1}""".format(r[1], r[0]))
+
         conn.commit()
         c.close()
 

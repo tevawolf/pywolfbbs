@@ -28,7 +28,7 @@ class PlayerDataSourcePostgreSQL(PlayerRepository):
         c.execute("SELECT * FROM players WHERE player_id = '{0}'".format(player_id))
         row = c.fetchone()
 
-        if not (row is None):
+        if row is not None:
             player.append(row[0])
             player.append(row[1])
             player.append(row[2])

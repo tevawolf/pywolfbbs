@@ -1,7 +1,7 @@
 from flask import render_template
 from flask.views import MethodView
 
-from pywolfbbs.domain.GameVil.object.GameVilPublicLevel import GameVilPublicLevel
+from pywolfbbs.domain.GameVil.enum.GameVilPublicLevel import GameVilPublicLevel
 from pywolfbbs.application.service.GameFrontService import GameFrontService
 
 

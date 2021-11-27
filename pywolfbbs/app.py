@@ -2,6 +2,7 @@ from datetime import timedelta
 
 from flask import Flask
 
+from pywolfbbs.application.view.HopePositionView import HopePositionView
 from pywolfbbs.application.view.VilMemberJoinView import VilMemberJoinView
 from pywolfbbs.application.view.AddSpeechView import AddSpeechView
 from pywolfbbs.application.view.InitView import InitView
@@ -27,6 +28,8 @@ def create_app():
     app.add_url_rule('/vil/<int:no>/<int:disp_date>/', view_func=GameVilView.as_view('vil'))
     app.add_url_rule('/vil/join/', view_func=VilMemberJoinView.as_view('member_join'))
     app.add_url_rule('/vil/addspeech/', view_func=AddSpeechView.as_view('speech_add'))
+    app.add_url_rule('/vil/hopeposition/', view_func=HopePositionView.as_view('hope_position'))
+
 
     app.add_url_rule('/vil/private/vil<int:no>/day<int:disp_date>/', view_func=GameVilPrivateAuthView.as_view('vil_private_auth'))
     app.add_url_rule('/vil/authprivatepath/', view_func=GameVilPrivatePasswordInputView.as_view('vil_private_password'))

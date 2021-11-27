@@ -7,7 +7,7 @@ class VilMemberRepository(metaclass=ABCMeta):
     """
 
     @abstractmethod
-    def queryVilMember(self, vil_no: int, player_id: str):
+    def queryVilMemberByPlayerId(self, vil_no: int, player_id: str) -> []:
         """
         vil_no、player_idに一致するVilMemberを返すクエリ―メソッド
         :param vil_no:
@@ -17,7 +17,26 @@ class VilMemberRepository(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def addMember(self, vil_no: int, player_id: str, member_name: str, member_title: str):
+    def queryVilMemberByMemberNo(self, vil_no: int, member_no: int) -> []:
+        """
+        vil_no、member_noに一致するVilMemberを返すクエリ―メソッド
+        :param vil_no:
+        :param member_no:
+        :return:
+        """
+        pass
+
+    @abstractmethod
+    def queryVilMemberList(self, vil_no: int) -> []:
+        """
+        vil_noに一致するVilMemberのリストを返すクエリ―メソッド
+        :param vil_no:
+        :return:
+        """
+        pass
+
+    @abstractmethod
+    def addMember(self, vil_no: int, player_id: str, member_name: str, member_title: str) -> bool:
         """
         VilMemberを永続化するメソッド
         :param vil_no:　村番号
@@ -25,5 +44,16 @@ class VilMemberRepository(metaclass=ABCMeta):
         :param member_name:　参加キャラクター名
         :param member_title:　参加キャラクター肩書き
         :return: 追加の成否
+        """
+        pass
+
+    @abstractmethod
+    def setHopePosition(self, vil_no: int, player_id: str, position_no: int) -> bool:
+        """
+        hope_positionをUpdateするメソッド
+        :param vil_no:　村番号
+        :param player_id:　プレイヤーID
+        :param position_no: 希望役職No
+        :return:
         """
         pass

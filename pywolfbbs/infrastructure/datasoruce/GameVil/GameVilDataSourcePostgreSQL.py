@@ -1,4 +1,3 @@
-from pywolfbbs.domain.GameVil.object.GameVilDateStatus import GameVilDateStatus
 from pywolfbbs.infrastructure.datasoruce.postgresql_db import get_postgres
 from pywolfbbs.infrastructure.repository.GameVil.GameVilRepository import GameVilRepository
 
@@ -21,50 +20,18 @@ class GameVilDataSourcePostgreSQL(GameVilRepository):
 
         return vil
 
-    def queryVilDateList(self, no: int) -> []:
+    def queryGameVilList(self) -> []:
 
         conn = get_postgres()
         c = conn.cursor()
-        c.execute('SELECT * FROM gamevil_dates WHERE vil_no = {0} ORDER BY date_num ASC'.format(no))
+        c.execute('SELECT * FROM gamevils ORDER BY vil_no DESC')
         rows = c.fetchall()
-        date_list = []
+        thread_list = []
         for row in rows:
-            date_list.append([row[0], row[1], row[2]])
+            thread_list.append([row[0], row[1], row[2], row[4], row[5]])
         c.close()
 
-        return date_list
-
-    def querySpeechList(self, no: int, date: int) -> []:
-
-        conn = get_postgres()
-        c = conn.cursor()
-        c.execute(
-            """
-            SELECT 
-                s.speech_no,
-                s.post_datetime,
-                s.speech_text,
-                s.player_id,
-                s.vil_no,
-                s.vil_date,
-                m.member_no,
-                m.member_name,
-                m.member_title
-            FROM speechs s
-            INNER JOIN vilmembers m
-            ON s.vil_no = m.vil_no
-            AND s.player_id = m.player_id
-            WHERE s.vil_no = {0} AND s.vil_date = {1} 
-            ORDER BY s.post_datetime ASC
-            """.format(no, date)
-        )
-        rows = c.fetchall()
-        speech_list = []
-        for row in rows:
-            speech_list.append([row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8]])
-        c.close()
-
-        return speech_list
+        return thread_list
 
     def createGameVil(self, name: str, level: int, password: str, date: int, status: int) -> int:
 
@@ -73,7 +40,7 @@ class GameVilDataSourcePostgreSQL(GameVilRepository):
 
         c.execute("""SELECT MAX(vil_no) FROM gamevils""")
         vil_no = c.fetchone()[0]
-        if not (vil_no is None):
+        if  vil_no is not None:
             vil_no = vil_no + 1
         else:
             vil_no = 1
@@ -92,7 +59,7 @@ class GameVilDataSourcePostgreSQL(GameVilRepository):
         c = conn.cursor()
         c.execute('SELECT vil_password FROM gamevils WHERE vil_no = {0}'.format(no))
         db_password = c.fetchone()[0]
-        if not (db_password is None):
+        if db_password is not None:
             return db_password
         else:
             return ''

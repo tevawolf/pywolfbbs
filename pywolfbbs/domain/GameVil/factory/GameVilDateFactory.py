@@ -2,7 +2,7 @@ from injector import Injector
 
 from pywolfbbs.binds import GameVilDIModule
 from pywolfbbs.domain.GameVil.object.GameVilDate import GameVilDate
-from pywolfbbs.domain.GameVil.object.GameVilDateStatus import GameVilDateStatus
+from pywolfbbs.domain.GameVil.enum.GameVilDateStatus import GameVilDateStatus
 from pywolfbbs.domain.GameVil.value.GaveVilDateNum import GameVilDateNum
 
 

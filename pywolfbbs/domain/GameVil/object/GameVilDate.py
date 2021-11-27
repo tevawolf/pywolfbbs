@@ -1,6 +1,6 @@
 from injector import inject
 
-from pywolfbbs.domain.GameVil.object.GameVilDateStatus import GameVilDateStatus
+from pywolfbbs.domain.GameVil.enum.GameVilDateStatus import GameVilDateStatus
 from pywolfbbs.domain.GameVil.value.GaveVilDateNum import GameVilDateNum
 from pywolfbbs.domain.GameVil.value.GameVilNo import GameVilNo
 from pywolfbbs.infrastructure.repository.GameVil.GameVilDateRepository import GameVilDateRepository

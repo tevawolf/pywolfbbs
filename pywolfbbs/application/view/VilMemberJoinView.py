@@ -22,7 +22,7 @@ class VilMemberJoinView(MethodView):
         VilMemberService.joinMember(vil_no, player_id, member_name, member_title)
 
         GameVilService.postSpeech(
-            datetime.datetime.now(), text, player_id, vil_no, vil_date)
+            datetime.datetime.now(), text, player_id, vil_no, vil_date, member_title, member_name)
 
         flash('入村しました。')
 

@@ -8,8 +8,7 @@ class GameVilDateDataSourcePostgreSQL(GameVilDateRepository):
 
         conn = get_postgres()
         c = conn.cursor()
-
-        c.execute("""SELECT * FROM gamevil_dates WHERE vil_no = {0} """.format(vil_no))
+        c.execute('SELECT * FROM gamevil_dates WHERE vil_no = {0} ORDER BY date_num ASC'.format(vil_no))
         rows = c.fetchall()
         date_list = []
         for row in rows:

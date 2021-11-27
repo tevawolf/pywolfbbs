@@ -1,5 +1,3 @@
-import datetime
-
 from flask import redirect, request, url_for, flash
 from flask.views import MethodView
 

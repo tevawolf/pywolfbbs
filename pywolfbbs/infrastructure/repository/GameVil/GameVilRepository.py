@@ -3,8 +3,9 @@ from abc import ABCMeta, abstractmethod
 
 class GameVilRepository(metaclass=ABCMeta):
     """
-    @RepositotyInterface リポジトリインターフェース
+    @RepositoryInterface リポジトリインターフェース
     """
+
     @abstractmethod
     def queryGameVil(self, no: int) -> []:
         """
@@ -15,18 +16,10 @@ class GameVilRepository(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def queryVilDateList(self, no: int) -> []:
+    def queryGameVilList(self) -> []:
         """
-        VilGameDateのリストを返すクエリーメソッド
-        :return: VilGameDateのリスト
-        """
-        return []
-
-    @abstractmethod
-    def querySpeechList(self, no: int, date: int) -> []:
-        """
-        Speechのリストを返すクエリーメソッド
-        :return: Speechのリスト
+        GameVilのリストを返すクエリ―メソッド
+        :return: GameVilのリスト
         """
         return []
 
