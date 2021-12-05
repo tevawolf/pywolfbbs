@@ -9,7 +9,7 @@
             <!-- 公開レベルが非公開の場合は、別のurlリンクにする -->
             {# リンクから現在日も渡すようにする #}
     {% if vil.public_level.value != public_levels[2].value %}
-            <a href="{{ url_for('vil', no=vil.vil_no.getValue(), disp_date=vil.current_date.getValue()) }}">
+            <a href="{{ url_for('vil', vil_no=vil.vil_no.getValue(), disp_date=vil.current_date.getValue()) }}">
     {% else %}
             <a href="{{ url_for('vil_private_auth', no=vil.vil_no.getValue(), disp_date=vil.current_date.getValue()) }}">
     {% endif %}

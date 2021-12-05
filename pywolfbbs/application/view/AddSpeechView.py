@@ -4,6 +4,7 @@ from flask import redirect, request, url_for, session, flash
 from flask.views import MethodView
 
 from pywolfbbs.application.service.GameVilService import GameVilService
+from pywolfbbs.application.service.SpeechService import SpeechService
 
 
 class AddSpeechView(MethodView):
@@ -17,17 +18,14 @@ class AddSpeechView(MethodView):
         vil_no = int(request.form['vil_no'])
         vil_date = int(request.form['vil_date'])
 
-        if 'player_id' in session:
-            GameVilService.postSpeech(
-                datetime.datetime.now(), request.form['text'], session['player_id'], vil_no, vil_date,
-                request.form['member_title'], request.form['member_name']
-            )
-        else:
-            # 人狼ゲームでは発言にプレイヤーログイン必須のため、不要になる
-            GameVilService.postSpeech(
-                datetime.datetime.now(), request.form['text'], 'anonymous', vil_no, vil_date,
-                request.form['member_title'], request.form['member_name'])
+        SpeechService.postSpeech(
+            datetime.datetime.now(), request.form['text'], session['player_id'], vil_no, vil_date,
+            request.form['member_title'], request.form['member_name']
+        )
+
+        # TODO 発言数or発言ptを減らす
+
 
         flash('発言を投稿しました。')
 
-        return redirect(url_for('vil', no=vil_no, disp_date=vil_date))
+        return redirect(url_for('vil', vil_no=vil_no, disp_date=vil_date))

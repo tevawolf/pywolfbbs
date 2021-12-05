@@ -1,5 +1,5 @@
+from pywolfbbs.domain.Position.factory.PositionFactory import PositionFactory
 from pywolfbbs.domain.VilMember.factory.VilMemberCollectionFactory import VilMemberCollectionFactory
-from pywolfbbs.domain.VilMember.factory.VilMemberDateStateFactory import VilMemberDateStateFactory
 from pywolfbbs.domain.VilMember.factory.VilMemberFactory import VilMemberFactory
 from pywolfbbs.domain.VilMember.object.VilMember import VilMember
 from pywolfbbs.domain.VilMember.object.VilMemberCollection import VilMemberCollection
@@ -77,3 +77,23 @@ class VilMemberService:
         :return:
         """
         pass
+
+    @staticmethod
+    def displayPositionDescription(vil_no: int, player_id: str) -> str:
+        """
+        役職説明欄を出力する
+        :param vil_no:
+        :param player_id:
+        :return:
+        """
+        # 参加者番号、希望役職No、役職Noはダミー
+        member = VilMemberFactory.create(vil_no, player_id, 0, 'dummy', 'dummy', 0, 0)
+        member.setValuesByRepositoryPlayerId()
+        # 役職No以外ダミー
+        position = PositionFactory.create(member.position.getValue(), 'dummy', 'dummy', 'dummy', 'dummy', 0)
+        position.setValuesByRepository()
+
+        # FIXME ひとまずDB値をそのまま
+        html_description = position.description.getValue()
+
+        return html_description

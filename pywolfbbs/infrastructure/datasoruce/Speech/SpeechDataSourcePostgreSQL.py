@@ -57,7 +57,7 @@ class SpeechDataSourcePostgreSQL(SpeechRepository):
 
         c.execute("""INSERT INTO speechs(speech_no, post_datetime, speech_text, player_id, vil_no, vil_date
                     , member_title, member_name)
-                    VALUES ({0}, '{1}', '{2}', '{3}', {4}, {5}, {6}, {7})""".format(
+                    VALUES ({0}, '{1}', '{2}', '{3}', {4}, {5}, '{6}', '{7}')""".format(
             no, dt, text, player_id, vil_no, vil_date, member_title, member_name))
         conn.commit()
 

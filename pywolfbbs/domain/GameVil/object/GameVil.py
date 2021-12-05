@@ -6,6 +6,8 @@ from pywolfbbs.domain.GameVil.enum.GameVilPublicLevel import GameVilPublicLevel
 from pywolfbbs.domain.GameVil.value.GameVilName import GameVilName
 from pywolfbbs.domain.GameVil.value.GameVilNo import GameVilNo
 from pywolfbbs.domain.GameVil.value.GameVilPassword import GameVilPassword
+from pywolfbbs.domain.Organization.value.OrganizationNo import OrganizationNo
+from pywolfbbs.domain.Speech.enum.SpeechQuantityType import SpeechQuantityType
 from pywolfbbs.infrastructure.repository.GameVil.GameVilRepository import GameVilRepository
 
 
@@ -23,10 +25,12 @@ class GameVil:
         self.password = None
         self.current_date = None
         self.current_date_status = None
+        self.speech_quantity_type = None
         self.organization_no = None
 
     def setValues(self, no: GameVilNo, name: GameVilName, level: GameVilPublicLevel, password: GameVilPassword,
-                  date: GameVilDateNum, status: GameVilDateStatus) -> None:
+                  date: GameVilDateNum, status: GameVilDateStatus, s_q_type: SpeechQuantityType,
+                  organization: OrganizationNo) -> None:
         """
         セッターメソッド
         :param no:　村No.
@@ -35,6 +39,8 @@ class GameVil:
         :param password: 入村・閲覧パスワード
         :param date: 現在日
         :param status: 現在日の状態（プロローグ／進行中／エピローグなど）
+        :param s_q_type: 発言数量タイプ
+        :param organization: 編成No
         :return: なし
         """
         self.vil_no = no
@@ -43,6 +49,8 @@ class GameVil:
         self.password = password
         self.current_date = date
         self.current_date_status = status
+        self.speech_quantity_type = s_q_type
+        self.organization_no = organization
 
     def setValuesByRepository(self) -> None:
         """
@@ -54,6 +62,8 @@ class GameVil:
         self.public_level = GameVilPublicLevel(int(vil[1]))
         self.current_date = GameVilDateNum(int(vil[2]))
         self.current_date_status = GameVilDateStatus(int(vil[3]))
+        self.speech_quantity_type = SpeechQuantityType(vil[4])
+        self.organization_no = OrganizationNo(vil[5])
 
     def createGameVil(self) -> int:
         """
@@ -66,7 +76,9 @@ class GameVil:
             self.public_level.value,
             self.password.getValue(),
             self.current_date.getValue(),
-            self.current_date_status.value
+            self.current_date_status.value,
+            self.speech_quantity_type.getValue(),
+            self.organization_no.getValue()
         )
 
     def isPasswordMatched(self) -> bool:

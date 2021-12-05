@@ -20,4 +20,4 @@ class GameVilReadonlyPasswordInputView(MethodView):
         else:
             flash('認証失敗。パスワードが違います。')
 
-        return redirect(url_for('vil', no=no, disp_date=date))
+        return redirect(url_for('vil', vil_no=no, disp_date=date))

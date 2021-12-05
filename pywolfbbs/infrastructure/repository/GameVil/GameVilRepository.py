@@ -24,7 +24,8 @@ class GameVilRepository(metaclass=ABCMeta):
         return []
 
     @abstractmethod
-    def createGameVil(self, name: str, level: int, password: str, date: int, status: int) -> int:
+    def createGameVil(self, name: str, level: int, password: str, date: int, status: int, speech_type: int
+                      , organization: int) -> int:
         """
         GameVilを永続化するメソッド
         :param name:
@@ -32,6 +33,8 @@ class GameVilRepository(metaclass=ABCMeta):
         :param password:
         :param date:
         :param status:
+        :param speech_type:
+        :param organization:
         :return: 村番号
         """
         pass

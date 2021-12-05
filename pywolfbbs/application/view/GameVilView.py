@@ -13,20 +13,20 @@ from pywolfbbs.application.service.GameVilService import GameVilService
 class GameVilView(MethodView):
 
     @staticmethod
-    def get(no: int, disp_date: int):
+    def get(vil_no: int, disp_date: int):
 
         # 村情報を取得
-        vil, dates = GameVilService.getVilDate(no)
+        vil, dates = GameVilService.getVilDate(vil_no)
         # 表示する発言を取得
-        speeches = SpeechService.getSpeeches(no, disp_date)
+        speeches = SpeechService.getSpeeches(vil_no, disp_date)
 
         # 参加者リスト＆フィルタ機能）を取得
-        members_states = VilMemberDateStateService.displayVilMemberDateStateList(no, disp_date)
+        members_states = VilMemberDateStateService.displayVilMemberDateStateList(vil_no, disp_date)
 
         if 'player_id' in session:
             # ログイン済みの場合、プレイヤー自身の参加者情報を取得
             player_id = session['player_id']
-            self_info = VilMemberService.findVilMemberByPlayerId(no, player_id)
+            self_info = VilMemberService.findVilMemberByPlayerId(vil_no, player_id)
 
             # 入村済みの場合
             if self_info is not None:
@@ -34,30 +34,38 @@ class GameVilView(MethodView):
                 if vil.current_date_status == GameVilDateStatus.プロローグ:
                     # FIXME 仮にG16編成で
                     html_position_select = \
-                        OrganizationService.displayHopePositionSelect(1, 16, self_info.hope_position.getValue(), no, disp_date)
+                        OrganizationService.displayHopePositionSelect(1, 16, self_info.hope_position.getValue(), vil_no, disp_date)
                 else:
                     html_position_select = None
 
-                # 進行中の場合は投票リストと能力行使対象リストを取得
-                # 自分以外の生存者のリストを取得し、選択フォーム生成
+                # 進行中の場合
                 if vil.current_date_status == GameVilDateStatus.進行中:
                     # 投票先、能力行使先などを取得
-                    self_state = VilMemberDateStateService.findVilMemberDateState(no, self_info.member_no.getValue(), disp_date)
+                    self_state = VilMemberDateStateService.findVilMemberDateState(vil_no, self_info.member_no.getValue(), disp_date)
+                    # 投票セットフォームと能力行使対象セットフォームを取得
+                    # 自分以外の生存者のリストを取得し、選択フォーム生成
+                    html_vote_select = VilMemberDateStateService.displayVoteSelect(vil_no, disp_date, self_state.vote_member.getValue())
+                    html_use_ability_select = \
+                        VilMemberDateStateService.displayUseAbilitySelect(
+                            vil_no, disp_date, self_state.use_ability_member.getValue(), self_info.position.getValue())
+                    # 役職説明欄を取得
+                    position_description = VilMemberService.displayPositionDescription(vil_no, player_id)
 
-                    votes = VilMemberDateStateService.displayVoteSelect(no, disp_date, self_state.vote_member.getValue())
-                    use_abilities = VilMemberDateStateService.displayUseAbilitySelect(no, disp_date, self_state.use_ability_member.getValue())
                 else:
-                    votes = None
-                    use_abilities = None
+                    html_vote_select = None
+                    html_use_ability_select = None
+                    position_description = None
             else:
                 html_position_select = None
-                votes = None
-                use_abilities = None
+                html_vote_select = None
+                html_use_ability_select = None
+                position_description = None
         else:
             self_info = None
             html_position_select = None
-            votes = None
-            use_abilities = None
+            html_vote_select = None
+            html_use_ability_select = None
+            position_description = None
 
         return render_template('vil.html',
                                vil=vil,
@@ -67,8 +75,9 @@ class GameVilView(MethodView):
                                members_states=members_states,
                                self_info=self_info,
                                html_position_select=html_position_select,
-                               votes=votes,
-                               use_abilities=use_abilities,
+                               html_vote_select=html_vote_select,
+                               html_use_ability_select=html_use_ability_select,
                                public_level=GameVilPublicLevel,
                                date_status=GameVilDateStatus,
+                               position_description=position_description,
                                )

@@ -1,6 +1,9 @@
 from abc import ABCMeta, abstractmethod
 
+from injector import inject
+
 from pywolfbbs.domain.Position.enum.CampNumbers import CampNumbers
+from pywolfbbs.domain.Position.value.AbilityName import AbilityName
 from pywolfbbs.domain.Position.value.PositionDescription import PositionDescription
 from pywolfbbs.domain.Position.value.PositionIcon import PositionIcon
 from pywolfbbs.domain.Position.value.PositionName import PositionName
@@ -14,15 +17,17 @@ class AbstractPosition(metaclass=ABCMeta):
     """
     @DomainObject 役職を表す抽象クラス
     """
+    @inject
     def __init__(self, r: PositionRepository):
         self.repository = r
         self.position_no = None # 役職番号
         self.position_name = None   # 役職名
         self.description = None # 役職説明
+        self.ability_name = None    # 能力名
         self.icon = None
         self.camps = None   # 陣営
 
-    def setValues(self, no: PositionNo, name: PositionName, desc: PositionDescription,
+    def setValues(self, no: PositionNo, name: PositionName, desc: PositionDescription, ability: AbilityName,
                   icon: PositionIcon, camp: CampNumbers) -> None:
         """
         セッターメソッド
@@ -36,6 +41,7 @@ class AbstractPosition(metaclass=ABCMeta):
         self.position_no = no
         self.position_name = name
         self.description = desc
+        self.ability_name = ability
         self.icon = icon
         self.camps = camp
 
@@ -44,24 +50,16 @@ class AbstractPosition(metaclass=ABCMeta):
         DB取得値をセット
         :return: なし
         """
+        position = self.repository.queryPositionById(self.position_no.getValue())
 
-    # これはVilMemberのリストを使ってGameVilが行う仕事
-    # @abstractmethod
-    # def displaySelectMember(self, member_list: [VilMember]):
-    #     """
-    #     能力行使対象選択リストを画面出力
-    #     :param member_list:
-    #     :return:
-    #     """
-    #     pass
-
-    @abstractmethod
-    def displayDescription(self):
-        """
-        役職説明を画面出力
-        :return:
-        """
-        pass
+        if position:
+            self.position_name = PositionName(position[0])
+            self.description = PositionDescription(position[1])
+            if position[2] is not None:
+                self.ability_name = AbilityName(position[2])
+            else:
+                self.ability_name = None
+            self.camps = CampNumbers(position[3])
 
     @abstractmethod
     def useAbility(self, src: VilMember, dst: VilMember):

@@ -26,7 +26,7 @@
     {# ステータスも見て、進行中以外なら、その文言を表示。表示日以外はリンク表示 #}
     {# 表示日を渡して村と発言を検索、表示 #}
     {% if date.date_num.getValue() != disp_date %}
-    <a href="{{ url_for('vil', no=vil.vil_no.getValue(), disp_date=date.date_num.getValue()) }}">
+    <a href="{{ url_for('vil', vil_no=vil.vil_no.getValue(), disp_date=date.date_num.getValue()) }}">
     {% endif %}
     {% if date.date_status == date_status.プロローグ %}
         プロローグ
@@ -85,9 +85,16 @@
         <div class="form-group">
             <label>肩書き：</label>{{ self_info.member_title.getValue() }}<br>
             <label>名前：</label>{{ self_info.member_name.getValue() }}<br>
-        {% if html_position_list != None %}
+        {% if html_position_select != None %}
             {# プロローグでは希望役職選択を表示する #}
             {% autoescape false %}{{ html_position_select }}{% endautoescape  %}
+        {% endif %}
+            {# 進行中では投票先選択・能力行使先選択を表示する #}
+        {% if html_vote_select != None %}
+            {% autoescape false %}{{ html_vote_select }}{% endautoescape  %}
+        {% endif %}
+        {% if html_use_ability_select != None %}
+            {% autoescape false %}{{ html_use_ability_select }}{% endautoescape  %}
         {% endif %}
             <form action="{{ url_for('speech_add') }}" method=post class="add-entry">
                 <label for="InputTextRO">本文</label>
@@ -98,6 +105,7 @@
                 <input type="hidden" name="member_title" value="{{ self_info.member_title.getValue() }}">
                 <input type="hidden" name="member_name" value="{{ self_info.member_name.getValue() }}">
             </form>
+            {{ position_description }}
         </div>
     </div>
 </div>
@@ -115,9 +123,16 @@
         <div class="form-group">
             <label>肩書き：</label>{{ self_info.member_title.getValue() }}
             <label>名前：</label>{{ self_info.member_name.getValue() }}<br>
-                {% if html_position_list != None %}
+                {% if html_position_select != None %}
                     {# プロローグでは希望役職選択を表示する #}
                     {% autoescape false %}{{ html_position_select }}{% endautoescape  %}
+                {% endif %}
+                {# 進行中では投票先選択・能力行使先選択を表示する #}
+                {% if html_vote_select != None %}
+                    {% autoescape false %}{{ html_vote_select }}{% endautoescape  %}
+                {% endif %}
+                {% if html_use_ability_select != None %}
+                    {% autoescape false %}{{ html_use_ability_select }}{% endautoescape  %}
                 {% endif %}
             <form action="{{ url_for('speech_add') }}" method=post class="add-entry">
                 <label for="InputText">本文</label>
@@ -128,6 +143,7 @@
                 <input type="hidden" name="member_title" value="{{ self_info.member_title.getValue() }}">
                 <input type="hidden" name="member_name" value="{{ self_info.member_name.getValue() }}">
             </form>
+            {{ position_description }}
         </div>
             {% else %}
             {# 入村前、入村用フォームを表示 #}

@@ -5,6 +5,8 @@ from pywolfbbs.domain.GameVil.factory.GameVilFactory import GameVilFactory
 from pywolfbbs.domain.GameVil.factory.GameVilDateFactory import GameVilDateFactory
 from pywolfbbs.domain.GameVil.object.GameVilCollection import GameVilCollection
 from pywolfbbs.domain.GameVil.enum.GameVilDateStatus import GameVilDateStatus
+from pywolfbbs.domain.GameVil.value.GameVilNo import GameVilNo
+from pywolfbbs.domain.Speech.enum.SpeechQuantityType import SpeechQuantityType
 
 
 class GameFrontService:
@@ -31,9 +33,12 @@ class GameFrontService:
         :param password:
         :return:
         """
-        # 現在日ステータスはダミー
-        vil = GameVilFactory.create(9999, name, int(level), password, 0, GameVilDateStatus.プロローグ)
+        # FIXME 仮に発言回数制と、G国編成をセット
+        vil = GameVilFactory.create(9999, name, int(level), password, 0, GameVilDateStatus.プロローグ.value,
+                                    SpeechQuantityType.回数制.value, 1)
         vil_no = vil.createGameVil()
-        vil_date = GameVilDateFactory.create(0, GameVilDateStatus.プロローグ)
-        vil_date.createGameVilDate(vil_no)
+        vil_date = GameVilDateFactory.create(0, GameVilDateStatus.プロローグ.value)
+        vil_date.createGameVilDate(GameVilNo(vil_no))
+
+        # TODO システムメッセージを作成
 

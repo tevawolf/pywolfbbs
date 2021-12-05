@@ -3,6 +3,7 @@ from datetime import timedelta
 from flask import Flask
 
 from pywolfbbs.application.view.HopePositionView import HopePositionView
+from pywolfbbs.application.view.SetUseAbilityView import SetUseAbilityView
 from pywolfbbs.application.view.VilMemberJoinView import VilMemberJoinView
 from pywolfbbs.application.view.AddSpeechView import AddSpeechView
 from pywolfbbs.application.view.InitView import InitView
@@ -14,6 +15,7 @@ from pywolfbbs.application.view.GameVilPrivateAuthView import GameVilPrivateAuth
 from pywolfbbs.application.view.GameVilPrivatePasswordInputView import GameVilPrivatePasswordInputView
 from pywolfbbs.application.view.GameVilReadonlyPasswordInputView import GameVilReadonlyPasswordInputView
 from pywolfbbs.application.view.GameVilView import GameVilView
+from pywolfbbs.application.view.SetVoteView import SetVoteView
 from pywolfbbs.application.view._develop_._DevViews_ import _DevProgressDateView_, _DevProgressEpilogueView_, \
     _DevProgressEndView_
 
@@ -25,11 +27,12 @@ def create_app():
     app.permanent_session_lifetime = timedelta(minutes=30)
 
     app.add_url_rule('/', view_func=InitView.as_view('init'))
-    app.add_url_rule('/vil/<int:no>/<int:disp_date>/', view_func=GameVilView.as_view('vil'))
+    app.add_url_rule('/vil/<int:vil_no>/<int:disp_date>/', view_func=GameVilView.as_view('vil'))
     app.add_url_rule('/vil/join/', view_func=VilMemberJoinView.as_view('member_join'))
     app.add_url_rule('/vil/addspeech/', view_func=AddSpeechView.as_view('speech_add'))
     app.add_url_rule('/vil/hopeposition/', view_func=HopePositionView.as_view('hope_position'))
-
+    app.add_url_rule('/vil/setvote/', view_func=SetVoteView.as_view('set_vote'))
+    app.add_url_rule('/vil/setuseability/', view_func=SetUseAbilityView.as_view('set_use_ability'))
 
     app.add_url_rule('/vil/private/vil<int:no>/day<int:disp_date>/', view_func=GameVilPrivateAuthView.as_view('vil_private_auth'))
     app.add_url_rule('/vil/authprivatepath/', view_func=GameVilPrivatePasswordInputView.as_view('vil_private_password'))

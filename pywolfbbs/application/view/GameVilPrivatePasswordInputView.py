@@ -18,7 +18,7 @@ class GameVilPrivatePasswordInputView(MethodView):
             session['vil_auth_no'] = no
             flash('認証成功。スレッドにアクセスできるようになりました。')
 
-            return redirect(url_for('vil', no=no, disp_date=date))
+            return redirect(url_for('vil', vil_no=no, disp_date=date))
         else:
             flash('認証失敗。パスワードが違います。')
 

@@ -1,7 +1,6 @@
 from injector import Injector
 
 from pywolfbbs.binds import VilMemberDIModule
-from pywolfbbs.domain.Speech.object.SpeechCollection import SpeechCollection
 from pywolfbbs.domain.GameVil.value.GameVilNo import GameVilNo
 from pywolfbbs.domain.VilMember.object.VilMemberCollection import VilMemberCollection
 

@@ -11,11 +11,7 @@ class GameVilDataSourcePostgreSQL(GameVilRepository):
 
         c.execute("""SELECT * FROM gamevils WHERE vil_no = {0} """.format(no))
         fetch = c.fetchone()
-        vil = []
-        vil.append(fetch[1])  # vil_name
-        vil.append(fetch[2])  # public_level
-        vil.append(fetch[4])  # current_date
-        vil.append(fetch[5])  # current_date_status
+        vil = [fetch[1], fetch[2], fetch[4], fetch[5], fetch[6], fetch[7]]
         c.close()
 
         return vil
@@ -28,12 +24,13 @@ class GameVilDataSourcePostgreSQL(GameVilRepository):
         rows = c.fetchall()
         thread_list = []
         for row in rows:
-            thread_list.append([row[0], row[1], row[2], row[4], row[5]])
+            thread_list.append([row[0], row[1], row[2], row[4], row[5], row[6], row[7]])
         c.close()
 
         return thread_list
 
-    def createGameVil(self, name: str, level: int, password: str, date: int, status: int) -> int:
+    def createGameVil(self, name: str, level: int, password: str, date: int, status: int, speech_type: int
+                      , organization: int) -> int:
 
         conn = get_postgres()
         c = conn.cursor()
@@ -46,8 +43,10 @@ class GameVilDataSourcePostgreSQL(GameVilRepository):
             vil_no = 1
 
         # TODO 例外処理　NGならFalseを返す
-        c.execute("""INSERT INTO gamevils(vil_no, vil_name, public_level, vil_password, cur_date, cur_date_status)
-                    VALUES ({0}, '{1}', {2}, '{3}', {4}, {5})""".format(vil_no, name, str(level), password, date, status))
+        c.execute("""INSERT INTO gamevils(
+        vil_no, vil_name, public_level, vil_password, cur_date, cur_date_status, speech_quantity_type, organization_no)
+                    VALUES ({0}, '{1}', {2}, '{3}', {4}, {5}, {6}, {7})"""
+                  .format(vil_no, name, str(level), password, date, status, speech_type, organization))
         conn.commit()
 
         c.close()

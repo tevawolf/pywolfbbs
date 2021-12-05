@@ -49,7 +49,7 @@ class VilMemberDateStateCollection:
                 use = int(m[4])
 
             member = VilMemberDateStateFactory.create(self.vil_no.getValue(), int(m[0]), self.date_num.getValue(),
-                                                      int(m[1]), int(m[2]), vote, use)
+                                                      int(m[5]), int(m[1]), int(m[2]), vote, use)
             self.vil_members_date_state.append(member)
 
     def listAllMembersState(self) -> [VilMemberDateState]:

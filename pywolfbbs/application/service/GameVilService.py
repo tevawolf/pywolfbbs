@@ -20,7 +20,7 @@ class GameVilService:
         :return:
         """
         # 公開レベル、現在日、現在日ステータスもダミー
-        vil = GameVilFactory.create(no, 'dummy', GameVilPublicLevel.公開.value, 'dummy', 0, GameVilDateStatus.プロローグ.value)
+        vil = GameVilFactory.create(no, 'dummy', GameVilPublicLevel.公開.value, 'dummy', 0, GameVilDateStatus.プロローグ.value, 0, 0)
         vil.setValuesByRepository()
 
         dates = GameVilDateCollectionFactory.create(no)
@@ -36,5 +36,5 @@ class GameVilService:
         :return:
         """
         # 公開レベル、現在日、現在日ステータスもダミー
-        vil = GameVilFactory.create(no, 'dummy', GameVilPublicLevel.公開.value(), password, 0, GameVilDateStatus.プロローグ.value())
+        vil = GameVilFactory.create(no, 'dummy', GameVilPublicLevel.公開.value, password, 0, GameVilDateStatus.プロローグ.value, 0, 0)
         return vil.isPasswordMatched()

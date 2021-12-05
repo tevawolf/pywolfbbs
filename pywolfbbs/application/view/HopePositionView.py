@@ -22,4 +22,4 @@ class HopePositionView(MethodView):
 
         flash('役職希望しました。')
 
-        return redirect(url_for('vil', no=vil_no, disp_date=vil_date))
+        return redirect(url_for('vil', vil_no=vil_no, disp_date=vil_date))

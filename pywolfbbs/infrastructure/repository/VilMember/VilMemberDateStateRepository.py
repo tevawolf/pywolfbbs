@@ -55,3 +55,27 @@ class VilMemberDateStateRepository(metaclass=ABCMeta):
         :return: 追加の成否
         """
         pass
+
+    @abstractmethod
+    def updateVote(self, vil_no: int, member_no: int, date: int, vote: int):
+        """
+        投票先の永続化情報を更新するメソッド
+        :param vil_no:
+        :param member_no:
+        :param date:
+        :param vote:
+        :return:
+        """
+        pass
+
+    @abstractmethod
+    def updateUseAbility(self, vil_no: int, member_no: int, date: int, use_ability: int):
+        """
+        能力行使先の永続化情報を更新するメソッド
+        :param vil_no:
+        :param member_no:
+        :param date:
+        :param use_ability:
+        :return:
+        """
+        pass

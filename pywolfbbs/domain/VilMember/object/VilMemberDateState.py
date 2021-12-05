@@ -4,6 +4,7 @@ from pywolfbbs.domain.GameVil.value.GameVilNo import GameVilNo
 from pywolfbbs.domain.GameVil.value.GameVilSpeechNum import GameVilSpeechNum
 from pywolfbbs.domain.GameVil.value.GameVilSpeechPt import GameVilSpeechPt
 from pywolfbbs.domain.GameVil.value.GaveVilDateNum import GameVilDateNum
+from pywolfbbs.domain.VilMember.enum.VilMemberPlaces import VilMemberPlaces
 from pywolfbbs.domain.VilMember.value.VilMemberNo import VilMemberNo
 from pywolfbbs.infrastructure.repository.VilMember.VilMemberDateStateRepository import VilMemberDateStateRepository
 
@@ -26,7 +27,7 @@ class VilMemberDateState:
         self.vote_member = None  # 投票相手（参加者）
         self.use_ability_member = None    # 能力行使相手（参加者）
 
-    def setValues(self, no: GameVilNo, member_no: VilMemberNo, date: GameVilDateNum,
+    def setValues(self, no: GameVilNo, member_no: VilMemberNo, date: GameVilDateNum, place: VilMemberPlaces,
                   num: GameVilSpeechNum, pt: GameVilSpeechPt, vote: VilMemberNo, use_abi: VilMemberNo):
         """
         セッターメソッド
@@ -42,6 +43,7 @@ class VilMemberDateState:
         self.vil_no = no
         self.member_no = member_no
         self.date_num = date
+        self.place = place
         self.remain_speech_num = num
         self.remain_speech_pt = pt
         self.vote_member = vote
@@ -55,6 +57,7 @@ class VilMemberDateState:
         state = self.repository.queryVilMemberDateState(
             self.vil_no.getValue(), self.member_no.getValue(), self.date_num.getValue())
 
+        self.place = VilMemberPlaces(int(state[4]))
         self.remain_speech_num = GameVilSpeechNum(int(state[0]))
         self.remain_speech_pt = GameVilSpeechPt(int(state[1]))
 
@@ -70,13 +73,26 @@ class VilMemberDateState:
         :param self:
         :return:
         """
-
-    # 永続化
+        # 永続化
 
     # 残り発言数を減らす
 
     # 残りpt数を減らす
 
-    # 投票先をセット
+    def registerVote(self):
+        """
+        投票先をセット
+        :return:
+        """
+        self.repository.updateVote(
+            self.vil_no.getValue(), self.member_no.getValue(), self.date_num.getValue(), self.vote_member.getValue()
+        )
 
-    # 能力行使先をセット
+    def registerUseAbility(self):
+        """
+        能力行使先をセット
+        :return:
+        """
+        self.repository.updateUseAbility(
+            self.vil_no.getValue(), self.member_no.getValue(), self.date_num.getValue(), self.use_ability_member.getValue()
+        )
