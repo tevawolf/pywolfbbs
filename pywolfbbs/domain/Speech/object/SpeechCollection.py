@@ -33,7 +33,7 @@ class SpeechCollection:
         """
         speech_list = self.repository.querySpeechList(self.vil_no.getValue(), disp_date)
         for s in speech_list:
-            speech = SpeechFactory.create(s[0], s[1], s[2], s[3], s[4], s[5], s[8], s[7])
+            speech = SpeechFactory.create(s[0], s[1], s[2], s[3], s[4], s[5], s[6], s[7], s[8], s[9])
             self.speeches.append(speech)
 
     def postAllSpeeches(self) -> [Speech]:

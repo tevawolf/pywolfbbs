@@ -27,15 +27,15 @@ class GameVilDate:
         self.date_num = num
         self.date_status = status
 
-    def createGameVilDate(self, vil_no: GameVilNo) -> None:
+    def createGameVilDate(self, conn, vil_no: GameVilNo) -> None:
         """
         村の日にちを作成
         :return: なし
         """
         # 永続化
-        self.repository.createGameVilDate(
+        self.repository.createGameVilDate(conn,
             self.date_num.getValue(),
-            vil_no,
+            vil_no.getValue(),
             self.date_status.value
         )
 

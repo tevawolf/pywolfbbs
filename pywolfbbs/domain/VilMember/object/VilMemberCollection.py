@@ -26,7 +26,7 @@ class VilMemberCollection:
         """
         self.vil_no = vil_no
 
-    def setVilMemberList(self):
+    def setVilMemberListByRepository(self):
         """
         リポジトリから村参加者のリストを取得し、保持する
         :return: なし

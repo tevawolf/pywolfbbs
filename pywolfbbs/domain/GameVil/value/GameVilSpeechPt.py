@@ -1,4 +1,7 @@
-class GameVilSpeechPt:
+from pywolfbbs.domain.GameVil.value.AbstractGameVilSpeechQuantity import AbstractGameVilSpeechQuantity
+
+
+class GameVilSpeechPt(AbstractGameVilSpeechQuantity):
     """
     @DomainObject
     @ValueObject

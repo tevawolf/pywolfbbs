@@ -45,14 +45,13 @@ class VilMemberDateStateService:
             member = VilMemberFactory.create(vil_no, 'dummy', member_state.member_no.getValue(), 'dummy', 'dummy', 0, 0)
             member.setValuesByRepositoryMemberNo()
 
-            html_select += '<div class="card"> \
-                <div class="card-body"> \
-                <label>{0} {1}</label><br> \
-                <label>残り発言数：{2}回</label> \
-                </div> \
-                </div>'.format(
-                member.member_title.getValue(), member.member_name.getValue(), member_state.remain_speech_num.getValue()
-            )
+            html_select += f"""
+                <div class="card">
+                <div class="card-body">
+                <label>{member.member_title.getValue()} {member.member_name.getValue()}</label><br>
+                <label>残り発言数：{member_state.remain_speech_num.getValue()}回</label>
+                </div>
+                </div>"""
 
         return html_select
 
@@ -76,9 +75,9 @@ class VilMemberDateStateService:
                 ground_member_list.append(member_state)
 
         # 選択フォームを作成
-        html_select = '<label>投票先</label> \
-                        <form action="' + url_for('set_vote') + '" method=post class=""> \
-                        <select name="vote_member">'
+        html_select = f"""<label>投票先</label>
+                        <form action="{url_for('set_vote')}" method=post class="">
+                        <select name="vote_member">"""
 
         for ground_member_state in ground_member_list:
 
@@ -90,19 +89,19 @@ class VilMemberDateStateService:
             # TODO ValueObjectにequalsメソッドを追加して判定に使用するようにしたい
             if int(ground_member_state.member_no.getValue()) == vote:
 
-                html_select += '<option value="{0}" selected>{1}(セット済み）</option>'\
-                    .format(ground_member.member_no.getValue(),
-                            ground_member.member_title.getValue() + ' ' + ground_member.member_name.getValue())
+                html_select += f"""<option value="{ground_member.member_no.getValue()}" selected>
+                                        {ground_member.member_title.getValue()} {ground_member.member_name.getValue()}(セット済み）
+                                    </option>"""
             else:
-                html_select += '<option value="{0}">{1}</option>'\
-                    .format(ground_member.member_no.getValue(),
-                            ground_member.member_title.getValue() + ' ' + ground_member.member_name.getValue())
+                html_select += f"""<option value="{ground_member.member_no.getValue()}">
+                                        {ground_member.member_title.getValue()} {ground_member.member_name.getValue()}
+                                    </option>"""
 
-        html_select += '</select> \
-                        <button type="submit" class="btn btn-danger">セット</button><br> \
-                        <input type="hidden" name="vil_no" value="{0}"> \
-                        <input type="hidden" name="vil_date" value="{1}"> \
-                        </form>'.format(vil_no, date_num)
+        html_select += f"""</select>
+                        <button type="submit" class="btn btn-danger">セット</button><br>
+                        <input type="hidden" name="vil_no" value="{vil_no}">
+                        <input type="hidden" name="vil_date" value="{date_num}">
+                        </form>"""
 
         return html_select
 
@@ -137,8 +136,8 @@ class VilMemberDateStateService:
 
         # 選択フォームを作成
         html_select = '<label>{0}先</label>'.format(position.ability_name.getValue())
-        html_select += '<form action="' + url_for('set_use_ability') + '" method=post class=""> \
-                        <select name="use_ability_member">'
+        html_select += f"""<form action="{url_for('set_use_ability')}" method=post class="">
+                        <select name="use_ability_member">"""
 
         for ground_member_state in ground_member_list:
 
@@ -159,7 +158,7 @@ class VilMemberDateStateService:
                             ground_member.member_title.getValue() + ' ' + ground_member.member_name.getValue())
 
         html_select += '</select> \
-                        <button type="submit" class="btn btn-danger">セット</button><br> \
+                        <button type="submit" class="btn btn-danger">{0}セット</button><br> \
                         <input type="hidden" name="vil_no" value="{1}"> \
                         <input type="hidden" name="vil_date" value="{2}"> \
                         </form>'.format(position.ability_name.getValue(), vil_no, date_num)
@@ -167,7 +166,7 @@ class VilMemberDateStateService:
         return html_select
 
     @staticmethod
-    def registerSetVote(vil_no: int, member_no: int, date_num: int, vote_member: int) -> None:
+    def registerSetVote(conn, vil_no: int, member_no: int, date_num: int, vote_member: int) -> None:
         """
         投票セット登録
         :param vil_no:
@@ -178,10 +177,10 @@ class VilMemberDateStateService:
         """
         # 居場所、発言数、発言pt、能力行使先はダミー
         state = VilMemberDateStateFactory.create(vil_no, member_no, date_num, 1, 0, 0, vote_member, 0)
-        state.registerVote()
+        state.registerVote(conn)
 
     @staticmethod
-    def registerSetUseAbility(vil_no: int, member_no: int, date_num: int, use_ability_member: int) -> None:
+    def registerSetUseAbility(conn, vil_no: int, member_no: int, date_num: int, use_ability_member: int) -> None:
         """
         能力行使セット登録
         :param vil_no:
@@ -191,6 +190,20 @@ class VilMemberDateStateService:
         """
         # 居場所、発言数、発言pt、投票先はダミー
         state = VilMemberDateStateFactory.create(vil_no, member_no, date_num, 1, 0, 0, 0, use_ability_member)
-        state.registerUseAbility()
+        state.registerUseAbility(conn)
 
-    # TODO 発言数or発言ptを減らす
+    @staticmethod
+    def reduceSpeechNumber(conn, vil_no: int, member_no: int, date_num: int) -> bool:
+        """
+        発言数を減らす
+        :param vil_no:
+        :param member_no:
+        :param date_num:
+        :return:
+        """
+        # 居場所、発言数、発言pt、投票先、能力行使先はダミー
+        state = VilMemberDateStateFactory.create(vil_no, member_no, date_num, 1, 0, 0, 0, 0)
+        state.setValuesByRepository()
+        return state.reduceSpeechNumber(conn)
+
+    # TODO 発言ptを減らす

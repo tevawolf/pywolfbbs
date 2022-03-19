@@ -1,11 +1,8 @@
-from pywolfbbs.domain.GameVil.value.AbstractGameVilSpeechQuantity import AbstractGameVilSpeechQuantity
-
-
-class GameVilSpeechNum(AbstractGameVilSpeechQuantity):
+class GameVilNumberOfPeople:
     """
     @DomainObject
     @ValueObject
-    村発言数
+    村の人数
     """
 
     def __init__(self, num: int):
@@ -27,6 +24,3 @@ class GameVilSpeechNum(AbstractGameVilSpeechQuantity):
 
     def getValue(self) -> int:
         return self.num
-
-    def isRemain(self) -> bool:
-        return self.num != 0

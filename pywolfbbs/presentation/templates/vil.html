@@ -67,6 +67,11 @@
     {# 公開レベルが入村PASS必要の場合、パスワード入力前はパスワード入力フォームを表示する #}
 <div class="card">
     <div class="card-body">
+        {% if not 'player_name' in session %}
+        {# サインイン前 #}
+        入村・発言するにはサインインしてください。
+        {% else %}
+        {# サインイン後 #}
         <form action="{{ url_for('vil_readonly_password') }}" method=post class="add-entry">
             <div class="form-group">
                 <label for="VilPassword">パスワード</label>
@@ -76,12 +81,20 @@
             <input type="hidden" name="vil_no" value="{{ vil.vil_no.getValue() }}">
             <input type="hidden" name="vil_date" value="{{ vil.current_date.getValue() }}">
         </form>
+        {% endif %}
     </div>
 </div>
     {% elif vil.public_level == public_level.入村PASS必要 and session['vil_auth'] == True and session['vil_auth_no'] == vil.vil_no.getValue() %}
     {# 公開レベルが入村PASS必要の場合で、PASS入力後　発言フォームを表示する #}
 <div class="card">
     <div class="card-body">
+        {% if not 'player_name' in session %}
+        {# サインイン前 #}
+        入村・発言するにはサインインしてください。
+        {% else %}
+        {# サインイン後 #}
+            {% if self_info != None %}
+            {# 入村後、発言フォームを表示する #}
         <div class="form-group">
             <label>肩書き：</label>{{ self_info.member_title.getValue() }}<br>
             <label>名前：</label>{{ self_info.member_name.getValue() }}<br>
@@ -102,11 +115,28 @@
                 <button type="submit" class="btn btn-danger">発言</button>
                 <input type="hidden" name="vil_no" value="{{ vil.vil_no.getValue() }}">
                 <input type="hidden" name="vil_date" value="{{ vil.current_date.getValue() }}">
-                <input type="hidden" name="member_title" value="{{ self_info.member_title.getValue() }}">
-                <input type="hidden" name="member_name" value="{{ self_info.member_name.getValue() }}">
+                <input type="hidden" name="speech_type" value="{{ speech_type.通常発言.value }}">{# TODO タブで発言種別を選択できるようにする #}
             </form>
             {{ position_description }}
         </div>
+            {% else %}
+            {# 入村前、入村用フォームを表示 #}
+        <form action="{{ url_for('member_join') }}" method=post class="add-entry">
+            <div class="form-group">
+                <label for="InputMemberTitle">肩書き</label>
+                <input type="text" class="form-control" id="InputMemberTitle" name="member_title">
+                <label for="InputMemberName">名前</label>
+                <input type="text" class="form-control" id="InputMemberName" name="member_name">
+                <label for="InputTextEnterVil">本文</label>
+                <textarea class="form-control" id="InputTextEnterVil" name="text" rows="3"></textarea>
+            </div>
+            <button type="submit" class="btn btn-danger">入村</button>
+            <input type="hidden" name="vil_no" value="{{ vil.vil_no.getValue() }}">
+            <input type="hidden" name="vil_date" value="{{ vil.current_date.getValue() }}">
+            <input type="hidden" name="speech_type" value="{{ speech_type.通常発言.value }}">
+        </form>
+            {% endif %}
+        {% endif %}
     </div>
 </div>
     {% elif vil.public_level != public_level.入村PASS必要 %}
@@ -140,8 +170,7 @@
                 <button type="submit" class="btn btn-danger">発言</button>
                 <input type="hidden" name="vil_no" value="{{ vil.vil_no.getValue() }}">
                 <input type="hidden" name="vil_date" value="{{ vil.current_date.getValue() }}">
-                <input type="hidden" name="member_title" value="{{ self_info.member_title.getValue() }}">
-                <input type="hidden" name="member_name" value="{{ self_info.member_name.getValue() }}">
+                <input type="hidden" name="speech_type" value="{{ speech_type.通常発言.value }}">{# TODO タブで発言種別を選択できるようにする #}
             </form>
             {{ position_description }}
         </div>
@@ -159,6 +188,7 @@
             <button type="submit" class="btn btn-danger">入村</button>
             <input type="hidden" name="vil_no" value="{{ vil.vil_no.getValue() }}">
             <input type="hidden" name="vil_date" value="{{ vil.current_date.getValue() }}">
+            <input type="hidden" name="speech_type" value="{{ speech_type.通常発言.value }}">
         </form>
             {% endif %}
         {% endif %}

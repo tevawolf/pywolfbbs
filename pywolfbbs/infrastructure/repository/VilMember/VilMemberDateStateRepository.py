@@ -41,7 +41,8 @@ class VilMemberDateStateRepository(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def addMemberDateState(self, vil_no: int, member_no: int, date: int, speech_num: int, pt: int, vote: int, use: int):
+    def addMemberDateState(self, conn, vil_no: int, member_no: int, date: int, speech_num: int, pt: int, vote: int,
+                           use: int, place) -> bool:
         """
         VilMemberDateStateを永続化するメソッド
         :param vil_no:　村番号
@@ -51,13 +52,14 @@ class VilMemberDateStateRepository(metaclass=ABCMeta):
         :param pt:
         :param vote:
         :param use:
+        :param place:
 
         :return: 追加の成否
         """
         pass
 
     @abstractmethod
-    def updateVote(self, vil_no: int, member_no: int, date: int, vote: int):
+    def updateVote(self, conn, vil_no: int, member_no: int, date: int, vote: int):
         """
         投票先の永続化情報を更新するメソッド
         :param vil_no:
@@ -69,7 +71,7 @@ class VilMemberDateStateRepository(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def updateUseAbility(self, vil_no: int, member_no: int, date: int, use_ability: int):
+    def updateUseAbility(self, conn, vil_no: int, member_no: int, date: int, use_ability: int):
         """
         能力行使先の永続化情報を更新するメソッド
         :param vil_no:
@@ -79,3 +81,13 @@ class VilMemberDateStateRepository(metaclass=ABCMeta):
         :return:
         """
         pass
+
+    @abstractmethod
+    def updateRemainSpeechNumber(self, conn, vil_no: int, member_no: int, date: int, remain_number: int):
+        """
+        残り発言数の永続化情報を更新するメソッド
+        :param vil_no:
+        :param member_no:
+        :param date:
+        :return:
+        """

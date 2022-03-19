@@ -15,17 +15,15 @@ class SpeechDataSourcePostgreSQL(SpeechRepository):
             SELECT 
                 s.speech_no,
                 s.post_datetime,
+                s.speech_type,
                 s.speech_text,
                 s.player_id,
                 s.vil_no,
                 s.vil_date,
-                m.member_no,
-                m.member_name,
-                m.member_title
+                s.member_no,
+                s.member_title,
+                s.member_name
             FROM speechs s
-            INNER JOIN vilmembers m
-            ON s.vil_no = m.vil_no
-            AND s.player_id = m.player_id
             WHERE s.vil_no = {0} AND s.vil_date = {1} 
             ORDER BY s.post_datetime ASC
             """.format(no, date)
@@ -33,33 +31,31 @@ class SpeechDataSourcePostgreSQL(SpeechRepository):
         rows = c.fetchall()
         speech_list = []
         for row in rows:
-            speech_list.append([row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8]])
+            speech_list.append([row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9]])
         c.close()
 
         return speech_list
 
-    def addSpeech(self, dt: datetime, text: str, player_id: str, vil_no: int, vil_date
-                  , member_title: str, member_name: str) -> bool:
+    def addSpeech(self, conn, dt: datetime, speech_type: int, text: str, player_id: str, vil_no: int, vil_date
+                  , member_no: int, member_title: str, member_name: str) -> bool:
 
-        # DB接続、SQL実行とコミット
-        conn = get_postgres()
         c = conn.cursor()
 
-        c.execute("""SELECT MAX(speech_no) FROM speechs WHERE vil_no = {0}""".format(vil_no))
-        no = c.fetchone()[0]
-        if no is not None:
-            no = no + 1
+        # TODO 単純な「通し番号」ではなく、「日にち:発言種別-連番」の形式で
+        c.execute(f"""SELECT MAX(speech_no) FROM speechs WHERE vil_no = {vil_no} AND vil_date = {vil_date}""")
+        speech_no = c.fetchone()[0]
+        if speech_no is not None:
+            speech_no = speech_no + 1
         else:
-            no = 1
+            speech_no = 1
 
         # textの改行コードに対応
         text = text.replace('\r\n', '<br>')
 
-        c.execute("""INSERT INTO speechs(speech_no, post_datetime, speech_text, player_id, vil_no, vil_date
-                    , member_title, member_name)
-                    VALUES ({0}, '{1}', '{2}', '{3}', {4}, {5}, '{6}', '{7}')""".format(
-            no, dt, text, player_id, vil_no, vil_date, member_title, member_name))
-        conn.commit()
+        c.execute(f"""INSERT INTO speechs(vil_no, vil_date, speech_no, post_datetime, speech_type, speech_text, 
+                    player_id, member_no, member_title, member_name)
+                    VALUES ({vil_no}, '{vil_date}', {speech_no}, '{dt}', {speech_type}, '{text}',
+                     '{player_id}', {member_no}, '{member_title}', '{member_name}')""")
 
         c.close()
         return True

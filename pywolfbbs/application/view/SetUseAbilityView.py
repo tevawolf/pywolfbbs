@@ -5,6 +5,7 @@ from flask.views import MethodView
 
 from pywolfbbs.application.service.VilMemberDateStateService import VilMemberDateStateService
 from pywolfbbs.application.service.VilMemberService import VilMemberService
+from pywolfbbs.infrastructure.datasoruce.postgresql_db import get_postgres
 
 
 class SetUseAbilityView(MethodView):
@@ -23,8 +24,15 @@ class SetUseAbilityView(MethodView):
         player_id = session['player_id']
         self_info = VilMemberService.findVilMemberByPlayerId(vil_no, player_id)
 
-        VilMemberDateStateService.registerSetUseAbility(vil_no, self_info.member_no.getValue(), vil_date, use_ability_member)
+        conn = get_postgres()
+        try:
+            VilMemberDateStateService.registerSetUseAbility(conn, vil_no, self_info.member_no.getValue(), vil_date, use_ability_member)
+            conn.commit()
 
-        flash('XXXXにセットしました。')
+            flash('XXXXにセットしました。')
 
-        return redirect(url_for('vil', vil_no=vil_no, disp_date=vil_date))
+            return redirect(url_for('vil', vil_no=vil_no, disp_date=vil_date))
+
+        except Exception as e:
+            conn.rollback()
+            print(e)

@@ -11,8 +11,8 @@ class VilMemberDateStateDataSourcePostgreSQL(VilMemberDateStateRepository):
         conn = get_postgres()
         c = conn.cursor()
 
-        c.execute("""SELECT * FROM vilmember_date_states 
-        WHERE vil_no = {0} AND member_no = '{1}' AND date_num = {2}""".format(vil_no, member_no, date))
+        c.execute(f"""SELECT * FROM vilmember_date_states 
+        WHERE vil_no = {vil_no} AND member_no = '{member_no}' AND date_num = {date}""")
         fetch = c.fetchone()
 
         if fetch is not None:
@@ -33,7 +33,7 @@ class VilMemberDateStateDataSourcePostgreSQL(VilMemberDateStateRepository):
         conn = get_postgres()
         c = conn.cursor()
 
-        c.execute("""SELECT * FROM vilmember_date_states WHERE vil_no = {0} and member_no = '{1}' """.format(vil_no, member_no))
+        c.execute(f"""SELECT * FROM vilmember_date_states WHERE vil_no = {vil_no} and member_no = '{member_no}' """)
         fetch = c.fetchall()
 
         for f in fetch:
@@ -49,7 +49,7 @@ class VilMemberDateStateDataSourcePostgreSQL(VilMemberDateStateRepository):
         conn = get_postgres()
         c = conn.cursor()
 
-        c.execute("""SELECT * FROM vilmember_date_states WHERE vil_no = {0} and date_num = '{1}' """.format(vil_no, date))
+        c.execute(f"""SELECT * FROM vilmember_date_states WHERE vil_no = {vil_no} and date_num = '{date}' """)
         fetch = c.fetchall()
 
         for f in fetch:
@@ -59,29 +59,45 @@ class VilMemberDateStateDataSourcePostgreSQL(VilMemberDateStateRepository):
 
         return state
 
-    def addMemberDateState(self, vil_no: int, member_no: int, date: int):
-        pass
+    def addMemberDateState(self, conn, vil_no: int, member_no: int, date: int, speech_num: int, pt: int, vote: int,
+                           use: int, place: int) -> bool:
 
-    def updateVote(self, vil_no: int, member_no: int, date: int, vote: int):
-
-        conn = get_postgres()
         c = conn.cursor()
 
-        c.execute("""UPDATE vilmember_date_states SET vote_member = {0} WHERE vil_no = {1} AND member_no = {2} AND date_num = {3}"""
-                  .format(vote, vil_no, member_no, date))
-        conn.commit()
+        c.execute(f"""INSERT INTO vilmember_date_states(vil_no, member_no, date_num, remain_speech_num,
+                    remain_speech_pt, vote_member, use_ability_member, place)
+                    VALUES ({vil_no}, '{member_no}', {date}, '{speech_num}', 
+                    '{pt}', '{vote}', '{use}', '{place}')""")
 
         c.close()
         return True
 
-    def updateUseAbility(self, vil_no: int, member_no: int, date: int, use_ability: int):
+    def updateVote(self, conn, vil_no: int, member_no: int, date: int, vote: int):
 
-        conn = get_postgres()
         c = conn.cursor()
 
-        c.execute("""UPDATE vilmember_date_states SET use_ability_member = {0} WHERE vil_no = {1} AND member_no = {2} AND date_num = {3}"""
-                  .format(use_ability, vil_no, member_no, date))
-        conn.commit()
+        c.execute(f"""UPDATE vilmember_date_states SET vote_member = {vote} 
+                    WHERE vil_no = {vil_no} AND member_no = {member_no} AND date_num = {date}""")
+
+        c.close()
+        return True
+
+    def updateUseAbility(self, conn, vil_no: int, member_no: int, date: int, use_ability: int):
+
+        c = conn.cursor()
+
+        c.execute(f"""UPDATE vilmember_date_states SET use_ability_member = {use_ability} 
+                    WHERE vil_no = {vil_no} AND member_no = {member_no} AND date_num = {date}""")
+
+        c.close()
+        return True
+
+    def updateRemainSpeechNumber(self, conn, vil_no: int, member_no: int, date: int, remain_number: int):
+
+        c = conn.cursor()
+
+        c.execute(f"""UPDATE vilmember_date_states SET remain_speech_num = {remain_number} 
+                    WHERE vil_no = {vil_no} AND member_no = {member_no} AND date_num = {date}""")
 
         c.close()
         return True

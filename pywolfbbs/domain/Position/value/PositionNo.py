@@ -27,3 +27,6 @@ class PositionNo:
 
     def isNotZero(self) -> bool:
         return self.no != 0
+
+    def equalNumber(self, no: 'PositionNo'):
+        return no.getValue() == self.no

@@ -11,7 +11,7 @@ class VilMemberDataSourcePostgreSQL(VilMemberRepository):
         conn = get_postgres()
         c = conn.cursor()
 
-        c.execute("""SELECT * FROM vilmembers WHERE vil_no = {0} and player_id = '{1}' """.format(vil_no, player_id))
+        c.execute(f"""SELECT * FROM vilmembers WHERE vil_no = {vil_no} and player_id = '{player_id}' """)
         fetch = c.fetchone()
 
         if fetch is not None:
@@ -32,7 +32,7 @@ class VilMemberDataSourcePostgreSQL(VilMemberRepository):
         conn = get_postgres()
         c = conn.cursor()
 
-        c.execute("""SELECT * FROM vilmembers WHERE vil_no = {0} and member_no = '{1}' """.format(vil_no, member_no))
+        c.execute(f"""SELECT * FROM vilmembers WHERE vil_no = {vil_no} and member_no = '{member_no}' """)
         fetch = c.fetchone()
 
         if fetch is not None:
@@ -53,7 +53,7 @@ class VilMemberDataSourcePostgreSQL(VilMemberRepository):
         conn = get_postgres()
         c = conn.cursor()
 
-        c.execute("""SELECT * FROM vilmembers WHERE vil_no = {0}""".format(vil_no))
+        c.execute(f"""SELECT * FROM vilmembers WHERE vil_no = {vil_no}""")
         rows = c.fetchall()
 
         for row in rows:
@@ -63,35 +63,39 @@ class VilMemberDataSourcePostgreSQL(VilMemberRepository):
 
         return member_list
 
-    def addMember(self, vil_no: int, player_id: str, member_name: str, member_title: str) -> bool:
+    def addMember(self, conn, vil_no: int, player_id: str, member_name: str, member_title: str) -> int:
 
-        # DB接続、SQL実行とコミット
-        conn = get_postgres()
         c = conn.cursor()
 
-        c.execute("""SELECT MAX(member_no) FROM vilmembers WHERE vil_no = {0}""".format(vil_no))
-        no = c.fetchone()[0]
-        if no is not None:
-            no = no + 1
+        c.execute(f"""SELECT MAX(member_no) FROM vilmembers WHERE vil_no = {vil_no}""")
+        member_no = c.fetchone()[0]
+        if member_no is not None:
+            member_no = int(member_no) + 1
         else:
-            no = 1
+            member_no = 1
 
-        c.execute("""INSERT INTO vilmembers(vil_no, player_id, member_no, member_name, member_title)
-                    VALUES ({0}, '{1}', {2}, '{3}', '{4}')""".format(vil_no, player_id, no, member_name, member_title))
-        conn.commit()
+        c.execute(f"""INSERT INTO vilmembers(vil_no, player_id, member_no, member_name, member_title)
+                    VALUES ({vil_no}, '{player_id}', {member_no}, '{member_name}', '{member_title}')""")
+
+        c.close()
+        return member_no
+
+    def setHopePosition(self, conn, vil_no: int, player_id: str, position_no: int) -> bool:
+
+        c = conn.cursor()
+
+        c.execute(f"""UPDATE vilmembers SET hope_position = {position_no} 
+                    WHERE vil_no = {vil_no} AND player_id = '{player_id}'""")
 
         c.close()
         return True
 
-    def setHopePosition(self, vil_no: int, player_id: str, position_no: int) -> bool:
+    def setPosition(self, conn, vil_no: int, player_id: str, position_no: int) -> bool:
 
-        # DB接続、SQL実行とコミット
-        conn = get_postgres()
         c = conn.cursor()
 
-        c.execute("""UPDATE vilmembers SET hope_position = {0} WHERE vil_no = {1} AND player_id = '{2}'"""
-                  .format(position_no, vil_no, player_id))
-        conn.commit()
+        c.execute(f"""UPDATE vilmembers SET position = {position_no} 
+                    WHERE vil_no = {vil_no} AND player_id = '{player_id}'""")
 
         c.close()
         return True

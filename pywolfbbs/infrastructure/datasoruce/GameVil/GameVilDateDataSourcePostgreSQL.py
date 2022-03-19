@@ -17,15 +17,13 @@ class GameVilDateDataSourcePostgreSQL(GameVilDateRepository):
 
         return date_list
 
-    def createGameVilDate(self, date: int, vil_no: int, status: int) -> bool:
+    def createGameVilDate(self, conn, date: int, vil_no: int, status: int) -> bool:
 
-        conn = get_postgres()
         c = conn.cursor()
 
         # プロローグの日付を追加
         c.execute("""INSERT INTO gamevil_dates(date_num, vil_no, date_status)
                     VALUES ({0}, {1}, {2})""".format(date, vil_no, status))
-        conn.commit()
 
         c.close()
         return True

@@ -5,6 +5,7 @@ import enum
 class SpeechType(enum.Enum):
     """
     @DomainObject 発言種別
+    TODO 番号をキーに、文字も持たせる（実際に画面表示してプレイヤーが識別できる文字）
     """
     通常発言 = 1
     独り言 = 2

@@ -5,6 +5,8 @@ from pywolfbbs.infrastructure.datasoruce.GameVil.GameVilDataSourcePostgreSQL imp
 from pywolfbbs.infrastructure.datasoruce.GameVil.GameVilDateDataSourcePostgreSQL import GameVilDateDataSourcePostgreSQL
 from pywolfbbs.infrastructure.datasoruce.Organization.OrganizationDataSourcePostgreSQL import \
     OrganizationDataSourcePostgreSQL
+from pywolfbbs.infrastructure.datasoruce.Organization.OrganizationPositionDataSourcePostgreSQL import \
+    OrganizationPositionDataSourcePostgreSQL
 from pywolfbbs.infrastructure.datasoruce.Position.PositionDataSourcePostgreSQL import PositionDataSourcePostgreSQL
 from pywolfbbs.infrastructure.datasoruce.Speech.SpeechDataSourcePostgreSQL import SpeechDataSourcePostgreSQL
 from pywolfbbs.infrastructure.datasoruce.Player.PlayerDataSourcePostgreSQL import PlayerDataSourcePostgreSQL
@@ -13,6 +15,8 @@ from pywolfbbs.infrastructure.datasoruce.VilMember.VilMemberDateStateDataSourceP
     VilMemberDateStateDataSourcePostgreSQL
 from pywolfbbs.infrastructure.repository.GameVil.GameVilDateRepository import GameVilDateRepository
 from pywolfbbs.infrastructure.repository.GameVil.GameVilRepository import GameVilRepository
+from pywolfbbs.infrastructure.repository.Organization.OrganizationPositionRepository import \
+    OrganizationPositionRepository
 from pywolfbbs.infrastructure.repository.Organization.OrganizationRepository import OrganizationRepository
 from pywolfbbs.infrastructure.repository.Position.PositionRepository import PositionRepository
 from pywolfbbs.infrastructure.repository.Speech.SpeechRepository import SpeechRepository
@@ -62,3 +66,10 @@ class OrganizationDIModule(Module):
 
     def configure(self, binder: Binder) -> None:
         binder.bind(OrganizationRepository, to=OrganizationDataSourcePostgreSQL)
+
+
+class OrganizationPositionDIModule(Module):
+
+    def configure(self, binder: Binder) -> None:
+        binder.bind(OrganizationPositionRepository, to=OrganizationPositionDataSourcePostgreSQL)
+

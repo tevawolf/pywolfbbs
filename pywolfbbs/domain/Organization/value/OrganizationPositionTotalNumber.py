@@ -1,4 +1,4 @@
-class OrganizationPositionNumber:
+class OrganizationPositionTotalNumber:
     """
     @DomainObject
     @ValueObject

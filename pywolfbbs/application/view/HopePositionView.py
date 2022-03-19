@@ -4,6 +4,7 @@ from flask import redirect, request, url_for, session, flash
 from flask.views import MethodView
 
 from pywolfbbs.application.service.VilMemberService import VilMemberService
+from pywolfbbs.infrastructure.datasoruce.postgresql_db import get_postgres
 
 
 class HopePositionView(MethodView):
@@ -18,8 +19,15 @@ class HopePositionView(MethodView):
         vil_date = int(request.form['vil_date'])
         position = int(request.form['hope_position'])
 
-        VilMemberService.registerHopePosition(vil_no, session['player_id'], position)
+        conn = get_postgres()
+        try:
+            VilMemberService.registerHopePosition(conn, vil_no, session['player_id'], position)
+            conn.commit()
 
-        flash('役職希望しました。')
+            flash('役職希望しました。')
 
-        return redirect(url_for('vil', vil_no=vil_no, disp_date=vil_date))
+            return redirect(url_for('vil', vil_no=vil_no, disp_date=vil_date))
+
+        except Exception as e:
+            conn.rollback()
+            print(e)

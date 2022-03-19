@@ -1,5 +1,7 @@
 from injector import inject
 
+from pywolfbbs.domain.GameVil.value.GaveVilNumberOfPeople import GameVilNumberOfPeople
+from pywolfbbs.domain.Organization.factory.OrganizationPositionFactory import OrganizationPositionFactory
 from pywolfbbs.domain.Organization.value.OrganizationName import OrganizationName
 from pywolfbbs.domain.Organization.value.OrganizationNo import OrganizationNo
 from pywolfbbs.domain.Position.object.AbstractPosition import AbstractPosition
@@ -40,11 +42,22 @@ class Organization:
         """
         pass
 
-    def getHopePositionSelect(self, nop: int) -> []:
+    def getHopePositionSelect(self, nop: GameVilNumberOfPeople) -> []:
         """
         役職希望選択リストを取得
         :param nop: 参加人数
         :return:
         """
-        return self.repository.queryOrganizationPositionList(self.organization_no, nop)
+        return self.repository.queryOrganizationPositionNameList(self.organization_no.getValue(), nop.getValue())
 
+    def setOrganizationPositionsByRepository(self, nop: GameVilNumberOfPeople) -> []:
+        """
+        役職ごとの定員リストを取得
+        :param nop: 参加人数
+        :return:
+        """
+        results = self.repository.queryOrganizationPositionTotalList(self.organization_no.getValue(), nop.getValue())
+        for result in results:
+            organization_position = OrganizationPositionFactory.create(
+                self.organization_no.getValue(), nop.getValue(), int(result[0]), int(result[1]))
+            self.organization_positions.append(organization_position)

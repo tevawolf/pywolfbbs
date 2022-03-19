@@ -24,8 +24,8 @@ class GameVilRepository(metaclass=ABCMeta):
         return []
 
     @abstractmethod
-    def createGameVil(self, name: str, level: int, password: str, date: int, status: int, speech_type: int
-                      , organization: int) -> int:
+    def createGameVil(self, conn, name: str, level: int, password: str, date: int, status: int, speech_type: int
+                      , max_speech: int, organization: int, number_of_people: int) -> int:
         """
         GameVilを永続化するメソッド
         :param name:
@@ -34,7 +34,9 @@ class GameVilRepository(metaclass=ABCMeta):
         :param date:
         :param status:
         :param speech_type:
+        :param max_speech:
         :param organization:
+        :param number_of_people:
         :return: 村番号
         """
         pass
@@ -45,6 +47,17 @@ class GameVilRepository(metaclass=ABCMeta):
         GameVilに設定されたパスワードを返すクエリーメソッド
         :param no:
         :param password:
+        :return:
+        """
+        pass
+
+    @abstractmethod
+    def updateCurrentDate(self, conn, no: int, date: int, status: int) -> bool:
+        """
+        GameVilのcurrent_date, current_date_statusを更新するメソッド
+        :param no:
+        :param date:
+        :param status
         :return:
         """
         pass

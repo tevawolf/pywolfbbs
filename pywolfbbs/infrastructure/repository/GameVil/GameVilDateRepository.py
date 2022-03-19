@@ -15,7 +15,7 @@ class GameVilDateRepository(metaclass=ABCMeta):
         return []
 
     @abstractmethod
-    def createGameVilDate(self, date: int, vil_no: int, status: int) -> bool:
+    def createGameVilDate(self, conn, date: int, vil_no: int, status: int) -> bool:
         """
         GameVilDateを永続化するメソッド
         :return:

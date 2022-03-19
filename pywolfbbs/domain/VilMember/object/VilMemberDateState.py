@@ -67,32 +67,51 @@ class VilMemberDateState:
         if state[3] is not None:
             self.use_ability_member = VilMemberNo(int(state[3]))
 
-    def createVilMemberDateState(self) -> int:
+    def createVilMemberDateState(self, conn) -> bool:
         """
         村参加者の日ごとの状態を作成
         :param self:
         :return:
         """
         # 永続化
+        self.repository.addMemberDateState(conn,
+            self.vil_no.getValue(), self.member_no.getValue(), self.date_num.getValue(),
+            self.remain_speech_num.getValue(), self.remain_speech_pt.getValue(),
+            self.vote_member.getValue(), self.use_ability_member.getValue(), self.place.value
+        )
+        return True
 
-    # 残り発言数を減らす
+
+    def reduceSpeechNumber(self, conn) -> bool:
+        """
+        残り発言数を減らす
+        :return:
+        """
+        if not self.remain_speech_num.isRemain():
+            return False
+        else:
+            self.repository.updateRemainSpeechNumber(conn,
+                self.vil_no.getValue(), self.member_no.getValue(), self.date_num.getValue(),
+                self.remain_speech_num.getValue() - 1
+            )
+            return True
 
     # 残りpt数を減らす
 
-    def registerVote(self):
+    def registerVote(self, conn):
         """
-        投票先をセット
+        投票先セット登録
         :return:
         """
-        self.repository.updateVote(
+        self.repository.updateVote(conn,
             self.vil_no.getValue(), self.member_no.getValue(), self.date_num.getValue(), self.vote_member.getValue()
         )
 
-    def registerUseAbility(self):
+    def registerUseAbility(self, conn):
         """
         能力行使先をセット
         :return:
         """
-        self.repository.updateUseAbility(
+        self.repository.updateUseAbility(conn,
             self.vil_no.getValue(), self.member_no.getValue(), self.date_num.getValue(), self.use_ability_member.getValue()
         )

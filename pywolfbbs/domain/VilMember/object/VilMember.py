@@ -20,13 +20,21 @@ class VilMember:
     def __init__(self, r: VilMemberRepository):
         self.repository = r
         self.vil_no = None
+        """村番号"""
         self.player_id = None
+        """プレイヤーID"""
         self.member_no = None
+        """参加者No"""
         self.member_name = None
-        self.member_title = None   # 肩書き
-        self.chartip = None # キャラチップ
-        self.hope_position = None   # 希望役職
-        self.position = None    # 役職
+        """参加者名（キャラクタ名）"""
+        self.member_title = None
+        """肩書き"""
+        self.chartip = None
+        """キャラチップ"""
+        self.hope_position = None
+        """希望役職"""
+        self.position = None
+        """役職"""
 
     def setValues(self, vil_no: GameVilNo, player_id: PlayerId, member_no: VilMemberNo, name: VilMemberName,
                   title: VilMemberTitle, hope: PositionNo, position: PositionNo):
@@ -81,23 +89,43 @@ class VilMember:
             if member[4] is not None:
                 self.position = PositionNo(int(member[4]))
 
-    def createMember(self) -> None:
+    def createMember(self, conn) -> int:
         """
         村の参加者を生成
-        :return: 
+        :return: 参加者No
         """
-        self.repository.addMember(
+        return self.repository.addMember(conn,
             self.vil_no.getValue(),
             self.player_id.getValue(),
             self.member_name.getValue(),
             self.member_title.getValue()
         )
 
-    def setHopePosition(self) -> None:
+    def setHopePosition(self, conn) -> None:
         """
         参加者の役職希望をセット
         :param position:
         :return:
         """
-        self.repository.setHopePosition(self.vil_no.getValue(), self.player_id.getValue(), self.hope_position.getValue())
+        self.repository.setHopePosition(conn, self.vil_no.getValue(), self.player_id.getValue(), self.hope_position.getValue())
 
+    def isSameHopePosition(self, position_no: PositionNo):
+        """
+        渡された役職Noがこの参加者の希望役職Noと同じかどうかを返す
+        :param position_no:
+        :return:
+        """
+        return position_no.equalNumber(self.hope_position)
+
+    def decidePosition(self, conn, position_no: PositionNo):
+        """
+        渡された役職者Noで参加者の役職を決定する
+        :param position_no:
+        :return:
+        """
+        self.repository.setPosition(conn, self.vil_no.getValue(), self.player_id.getValue(), position_no.getValue())
+
+    def __eq__(self, other):
+        if not isinstance(other, VilMember):
+            return NotImplemented
+        return self.vil_no == other.vil_no and self.member_no == other.member_no

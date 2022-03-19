@@ -24,3 +24,6 @@ class GameVilDateNum:
 
     def getValue(self) -> int:
         return self.num
+
+    def nextDate(self) -> 'GameVilDateNum':
+        return GameVilDateNum(self.num + 1)

@@ -8,6 +8,7 @@ from pywolfbbs.application.service.VilMemberService import VilMemberService
 from pywolfbbs.domain.GameVil.enum.GameVilDateStatus import GameVilDateStatus
 from pywolfbbs.domain.GameVil.enum.GameVilPublicLevel import GameVilPublicLevel
 from pywolfbbs.application.service.GameVilService import GameVilService
+from pywolfbbs.domain.Speech.enum.SpeechType import SpeechType
 
 
 class GameVilView(MethodView):
@@ -32,9 +33,9 @@ class GameVilView(MethodView):
             if self_info is not None:
                 # プロローグの場合は希望役職選択フォームを取得
                 if vil.current_date_status == GameVilDateStatus.プロローグ:
-                    # FIXME 仮にG16編成で
+                    # FIXME 仮編成で
                     html_position_select = \
-                        OrganizationService.displayHopePositionSelect(1, 16, self_info.hope_position.getValue(), vil_no, disp_date)
+                        OrganizationService.displayHopePositionSelect(1, 5, self_info.hope_position.getValue(), vil_no, disp_date)
                 else:
                     html_position_select = None
 
@@ -80,4 +81,5 @@ class GameVilView(MethodView):
                                public_level=GameVilPublicLevel,
                                date_status=GameVilDateStatus,
                                position_description=position_description,
+                               speech_type=SpeechType,
                                )

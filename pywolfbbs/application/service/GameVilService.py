@@ -1,9 +1,8 @@
 from pywolfbbs.domain.GameVil.factory.GameVilDateCollectionFactory import GameVilDateCollectionFactory
 from pywolfbbs.domain.GameVil.object.GameVilDateCollection import GameVilDateCollection
-from pywolfbbs.domain.GameVil.enum.GameVilDateStatus import GameVilDateStatus
 from pywolfbbs.domain.GameVil.factory.GameVilFactory import GameVilFactory
 from pywolfbbs.domain.GameVil.object.GameVil import GameVil
-from pywolfbbs.domain.GameVil.enum.GameVilPublicLevel import GameVilPublicLevel
+from pywolfbbs.domain.GameVil.value.GameVilPassword import GameVilPassword
 
 
 class GameVilService:
@@ -14,18 +13,31 @@ class GameVilService:
     @staticmethod
     def getVilDate(no: int) -> (GameVil, GameVilDateCollection, ):
         """
-        村番号に該当する村情報を取得
+        村番号に該当する村情報・村の日付情報を取得
         :param no:
         :param disp_date:
         :return:
         """
-        # 公開レベル、現在日、現在日ステータスもダミー
-        vil = GameVilFactory.create(no, 'dummy', GameVilPublicLevel.公開.value, 'dummy', 0, GameVilDateStatus.プロローグ.value, 0, 0)
+
+        vil = GameVilFactory.create_only_no(no)
         vil.setValuesByRepository()
 
         dates = GameVilDateCollectionFactory.create(no)
 
         return vil, dates
+
+    @staticmethod
+    def getVil(no: int) -> GameVil:
+        """
+        村番号に該当する村情報を取得
+        :param no:
+        :return:
+        """
+
+        vil = GameVilFactory.create_only_no(no)
+        vil.setValuesByRepository()
+
+        return vil
 
     @staticmethod
     def authenticatePassword(no: int, password: str) -> bool:
@@ -35,6 +47,7 @@ class GameVilService:
         :param password:
         :return:
         """
-        # 公開レベル、現在日、現在日ステータスもダミー
-        vil = GameVilFactory.create(no, 'dummy', GameVilPublicLevel.公開.value, password, 0, GameVilDateStatus.プロローグ.value, 0, 0)
+        vil = GameVilFactory.create_only_no(no)
+        vil.password = GameVilPassword(password)
+
         return vil.isPasswordMatched()

@@ -25,19 +25,21 @@ class SpeechService:
         return speeches
 
     @staticmethod
-    def postSpeech(dt: datetime, text: str, player_id: str, vil_no: int, vil_date: int,
-                   member_title: str, member_name: str) -> None:
+    def postSpeech(conn, dt: datetime, type: int, text: str, player_id: str, vil_no: int, vil_date: int,
+                   member_no: int, member_title: str, member_name: str) -> None:
         """
         発言投稿
         :param dt:
+        :param type:
         :param text:
         :param player_id:
         :param vil_no:
         :param vil_date:
+        :param member_no:
         :param member_title:
         :param member_name:
         :return:
         """
 
-        speech = SpeechFactory.create(9999, dt, text, player_id, vil_no, vil_date, member_title, member_name)
-        speech.createSpeech()
+        speech = SpeechFactory.create(9999, dt, type, text, player_id, vil_no, vil_date, member_no, member_title, member_name)
+        speech.createSpeech(conn)
